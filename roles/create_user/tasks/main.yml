@@ -1,0 +1,20 @@
+---
+- name: Creation of "mobyle" user
+  user: name=mobyle comment="Application user" shell=/bin/bash state=present
+
+- name: register mobyle_home
+  become: yes
+  become_user: mobyle
+  shell: grep '^mobyle' /etc/passwd | cut -d ':' -f6
+  changed_when: false
+  register: mobyle_home
+
+- name: Create src directory
+  become: yes
+  become_user: mobyle
+  file: path=~/src/ state=directory
+
+- name: Modify PATH
+  become: yes
+  become_user: mobyle
+  lineinfile: dest=~/.bashrc insertafter=EOF line="export PATH=$HOME/bin:$PATH"

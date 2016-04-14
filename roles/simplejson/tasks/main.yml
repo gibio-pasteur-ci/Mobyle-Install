@@ -1,0 +1,23 @@
+---
+
+- name: Simplejson Download
+  become: yes
+  become_user: mobyle
+  get_url: url=https://pypi.python.org/packages/source/s/simplejson/simplejson-3.8.2.tar.gz#md5=53b1371bbf883b129a12d594a97e9a18 dest=~/src/
+
+
+- name: Simplejson Unarchive
+  become: yes
+  become_user: mobyle
+  unarchive: src=~/src/simplejson-3.8.2.tar.gz dest=~/src creates=~/src/simplejson-3.8.2 copy=no
+
+- name: Simplejson Build
+  become: yes
+  become_user: mobyle
+  command: ~/bin/python setup.py build chdir=~/src/simplejson-3.8.2
+
+- name: Simplejson Install
+  become: yes
+  become_user: mobyle
+  command: ~/bin/python setup.py install chdir=~/src/simplejson-3.8.2
+

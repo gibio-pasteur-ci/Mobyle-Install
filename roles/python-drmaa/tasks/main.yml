@@ -1,0 +1,22 @@
+---
+
+- name: python-drmaa Download
+  become: yes
+  become_user: mobyle
+  get_url: url=https://github.com/pygridtools/drmaa-python/archive/v0.7.6.tar.gz dest=~/src/
+
+- name: python-drmaa Unarchive
+  become: yes
+  become_user: mobyle
+  unarchive: src=~/src/drmaa-python-0.7.6.tar.gz dest=~/src creates=~/src/drmaa-python-0.7.6 copy=no
+
+- name: python-drmaa Build
+  become: yes
+  become_user: mobyle
+  command: ~/bin/python setup.py build chdir=~/src/drmaa-python-0.7.6
+
+- name: python-drmaa Install
+  become: yes
+  become_user: mobyle
+  command: ~/bin/python setup.py install chdir=~/src/drmaa-python-0.7.6
+

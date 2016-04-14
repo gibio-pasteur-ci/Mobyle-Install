@@ -1,0 +1,27 @@
+---
+- name: register mobyle_home
+  become: yes
+  become_user: mobyle
+  shell: grep '^mobyle' /etc/passwd | cut -d ':' -f6
+  changed_when: false
+  register: mobyle_home
+
+- name: libxml Download
+  become: yes
+  become_user: mobyle
+  get_url:  url=https://pypi.python.org/packages/source/l/lxml/lxml-3.5.0.tar.gz#md5=9f0c5f1eb43ff44d5455dab4b4efbe73 dest=~/src/
+
+- name: libxml Extract
+  become: yes
+  become_user: mobyle
+  unarchive: src=~/src/lxml-3.5.0.tar.gz dest=~/src creates=~/src/lxml-3.5.0 copy=no
+
+- name: libxml build
+  become: yes
+  become_user: mobyle
+  command: ~/bin/python setup.py build_ext -i -I{{mobyle_home.stdout}}/include/libxml2/ -L{{mobyle_home.stdout}}/lib/ --rpath={{mobyle_home.stdout}}/lib  --with-xslt-config={{mobyle_home.stdout}}/bin/xslt-config chdir=~/src/lxml-3.5.0
+
+- name: libxml Install
+  become: yes
+  become_user: mobyle
+  command: ~/bin/python setup.py install chdir=~/src/lxml-3.5.0

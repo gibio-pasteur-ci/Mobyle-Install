@@ -1,0 +1,8 @@
+---
+
+- name: BioPython Install
+  become: yes
+  become_user: mobyle
+  command: ~/bin/easy_install biopython
+
+

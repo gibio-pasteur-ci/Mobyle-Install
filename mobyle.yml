@@ -1,0 +1,24 @@
+---
+- name: Install Mobyle and its dependancies
+  hosts: ifb
+  remote_user: root
+
+  roles:
+    - {role: system_dependancies, tags: ['system']}
+    - {role: create_user, tags: ['user']}
+    - {role: python, tags: ['python']}
+    - {role: setuptools, tags: ['setuptools']}
+    - {role: biopython, tags: ['biopython']}
+    - {role: libxml2, tags: ['libxml2']}
+    - {role: libxslt, tags: ['libxslt']}
+    - {role: lxml, tags: ['lxml']}
+    - {role: simplejson, tags: ['json']}
+    - {role: simpletal, tags: ['tal']}
+    - {role: dnspython, tags: ['dns']}
+    - {role: python-drmaa, tags: ['py-drmaa']}
+    - {role: pillow, tags: ['pillow']}
+    - {role: graphviz, tags: ['graphviz']}
+   # - {role: pygraphviz, tags: ['pygraphviz']}
+   # - {role: golden, tags: ['golden']}
+   # - {role: squizz, tags: ['squizz']}
+   # - {role: mobyle, tags: ['mobyle']}

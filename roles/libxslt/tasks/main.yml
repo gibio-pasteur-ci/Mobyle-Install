@@ -1,0 +1,32 @@
+---
+- name: register mobyle_home
+  become: yes
+  become_user: mobyle
+  shell: grep '^mobyle' /etc/passwd | cut -d ':' -f6
+  changed_when: false
+  register: mobyle_home
+
+- name: libxslt Download
+  become: yes
+  become_user: mobyle
+  get_url:  url=ftp://xmlsoft.org/libxml2/LATEST_LIBXSLT_IS_1.1.28 dest=~/src/
+
+- name: libxslt Extract
+  become: yes
+  become_user: mobyle
+  unarchive: src=~/src/LATEST_LIBXSLT_IS_1.1.28 dest=~/src creates=~/src/libxslt-1.1.28 copy=no
+
+- name: libxslt configure
+  become: yes
+  become_user: mobyle
+  command: ./configure --prefix={{mobyle_home.stdout}} --without-python --with-libxml-prefix={{mobyle_home.stdout}} chdir=~/src/libxslt-1.1.28 creates=Makefile
+
+- name: libxslt make
+  become: yes
+  become_user: mobyle
+  command: make chdir=~/src/libxslt-1.1.28
+
+- name: libxslt Install
+  become: yes
+  become_user: mobyle
+  command: make install chdir=~/src/libxslt-1.1.28

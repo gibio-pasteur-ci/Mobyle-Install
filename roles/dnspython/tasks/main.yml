@@ -1,0 +1,22 @@
+---
+
+- name: dnspython Download
+  become: yes
+  become_user: mobyle
+  get_url: url=https://pypi.python.org/packages/source/d/dnspython/dnspython-1.12.0.zip#md5=bcfab8f4f4a2280f875e646502b23e66 dest=~/src/
+
+- name: dnspython Unarchive
+  become: yes
+  become_user: mobyle
+  unarchive: src=~/src/dnspython-1.12.0.zip dest=~/src creates=~/src/dnspython-1.12.0 copy=no
+
+- name: dnspython Build
+  become: yes
+  become_user: mobyle
+  command: ~/bin/python setup.py build chdir=~/src/dnspython-1.12.0
+
+- name: dnspython Install
+  become: yes
+  become_user: mobyle
+  command: ~/bin/python setup.py install chdir=~/src/dnspython-1.12.0
+

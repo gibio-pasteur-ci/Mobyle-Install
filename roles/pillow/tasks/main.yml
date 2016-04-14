@@ -1,0 +1,22 @@
+---
+
+- name: Pillow Download
+  become: yes
+  become_user: mobyle
+  get_url: url=https://pypi.python.org/packages/source/P/Pillow/Pillow-3.2.0.tar.gz#md5=7cfd093c11205d9e2ebe3c51dfcad510 dest=~/src/
+
+- name: Pillow Unarchive
+  become: yes
+  become_user: mobyle
+  unarchive: src=~/src/Pillow-3.2.0.tar.gz dest=~/src creates=~/src/Pillow-3.2.0 copy=no
+
+- name: Pillow Build
+  become: yes
+  become_user: mobyle
+  command: ~/bin/python setup.py build_ext -i chdir=~/src/Pillow-3.2.0
+
+- name: Pillow Install
+  become: yes
+  become_user: mobyle
+  command: ~/bin/python setup.py install chdir=~/src/Pillow-3.2.0
+
