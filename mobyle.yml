@@ -18,6 +18,6 @@
     - {role: python-drmaa, tags: ['py-drmaa']}
     - {role: pillow, tags: ['pillow']}
     - {role: pygraphviz, tags: ['pygraphviz']}
-   # - {role: golden, tags: ['golden']}
+    - {role: golden, tags: ['golden']}
    # - {role: squizz, tags: ['squizz']}
    # - {role: mobyle, tags: ['mobyle']}
