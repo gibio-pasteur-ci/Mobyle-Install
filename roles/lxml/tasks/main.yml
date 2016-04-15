@@ -1,6 +1,14 @@
 ---
+- name: register mobyle_home
+  become: yes
+  become_user: mobyle
+  shell: grep '^mobyle' /etc/passwd | cut -d ':' -f6
+  changed_when: false
+  register: mobyle_home
+
 # the 3.5.0 version doesn not honored -I -L option so lxml is always linked to system libraries
 # the 2.3.1 is used by Mobyle in production from long time at pasteur so use this version
+
 - name: libxml Download
   become: yes
   become_user: mobyle
