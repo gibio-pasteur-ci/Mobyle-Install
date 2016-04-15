@@ -11,3 +11,5 @@
    - freetype-devel.x86_64 # needed by pillow
    - libpng-devel.x86_64 # needed by pillow
    - graphviz-devel.x86_64 # needed by pygraphviz
+   - httpd.x86_64 # needed by Mobyle
+   - java-1.8.0-openjdk-devel.x86_64 # needed by BMPS

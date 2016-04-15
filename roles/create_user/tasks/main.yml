@@ -14,7 +14,7 @@
   become_user: mobyle
   file: path=~/src/ state=directory
 
-- name: Modify PATH
-  become: yes
-  become_user: mobyle
-  lineinfile: dest=~/.bashrc insertafter=EOF line="export PATH=$HOME/bin:$PATH"
+#- name: Modify PATH
+#  become: yes
+#  become_user: mobyle
+#  lineinfile: dest=~/.bashrc insertafter=EOF line="export PATH=$HOME/bin:$PATH"

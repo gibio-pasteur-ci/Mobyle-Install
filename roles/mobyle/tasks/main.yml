@@ -6,84 +6,85 @@
   changed_when: false
   register: mobyle_home
 
-- name: Create src directory
-  become: yes
-  become_user: mobyle
-  file: path=~/src/ state=directory
+- name: Set mobyle_home in facts
+  set_fact: mobyle_home="{{ mobyle_home.stdout }}"
 
-- name: Python Download
+- name: Mobyle Download
   become: yes
   become_user: mobyle
-  get_url: url=https://www.python.org/ftp/python/2.7.11/Python-2.7.11.tgz dest=~/src/
-  tags: install_python
+  get_url: url=ftp://ftp.pasteur.fr/pub/gensoft/projects/mobyle/Mobyle+BMPS-1.5.5.tar.gz dest=~/src/
 
-- name: Python Unarchive
-  become: yes
-  become_user: mobyle
-  unarchive: src=~/src/Python-2.7.11.tgz dest=~/src creates=~/src/Python-2.7.11 copy=no
-  tags: install_python
 
-- name: Python configure
+- name: Mobyle Unarchive
   become: yes
   become_user: mobyle
-  command: ./configure --prefix={{mobyle_home.stdout}} chdir=~/src/Python-2.7.11 creates=Makefile
+  unarchive: src=~/src/Mobyle+BMPS-1.5.5.tar.gz dest=~/src creates=~/src/obyle+BMPS-1.5.5 copy=no
 
-- name: Python make
+- name: Mobyle Build
   become: yes
   become_user: mobyle
-  command: make chdir=~/src/Python-2.7.11
+  command: ~/bin/python setup.py build chdir=~/src/Mobyle+BMPS-1.5.5
 
-- name: Python Install
+- name: Add install_core in setup.cfg
   become: yes
   become_user: mobyle
-  command: make install chdir=~/src/Python-2.7.11
+  ini_file: dest=~/src/Mobyle+BMPS-1.5.5/setup.cfg
+            section=install
+            option=install_core value={{ mobyle_home }}/Mobyle
 
-- name: setuptools Download
+- name: Add install_cgis in setup.cfg
   become: yes
   become_user: mobyle
-  get_url:  url=https://pypi.python.org/packages/source/s/setuptools/setuptools-20.7.0.tar.gz#md5=5d12b39bf3e75e80fdce54e44b255615 dest=~/src/
+  ini_file: dest=~/src/Mobyle+BMPS-1.5.5/setup.cfg
+            section=install
+            option=install_cgis value={{ mobyle_home }}/web/cgi-bin
 
-- name: setuptools Extract
+- name: Add install_htdocs in setup.cfg
   become: yes
   become_user: mobyle
-  unarchive: src=~/src/setuptools-20.7.0.tar.gz dest=~/src creates=~/src/setuptools-20.7.0 copy=no
+  ini_file: dest=~/src/Mobyle+BMPS-1.5.5/setup.cfg
+            section=install
+            option=install_htdocs value={{ mobyle_home }}/web/htdocs
 
-- name: setuptools Build
+- name: Add install_bmps in setup.cfg
   become: yes
   become_user: mobyle
-  shell: ~/bin/python setup.py build  chdir=~/src/setuptools-20.7.0
+  ini_file: dest=~/src/Mobyle+BMPS-1.5.5/setup.cfg
+            section=install
+            option=install_bmps value=1
 
-- name: setuptools Install
+- name: Mobyle Install
   become: yes
   become_user: mobyle
-  command: ~/bin/python setup.py install chdir=~/src/setuptools-20.7.0
+  command: ~/bin/python setup.py install chdir=~/src/Mobyle+BMPS-1.5.5
 
-- name: BioPython Install
+- name: Modify PATH
   become: yes
   become_user: mobyle
-  command: ~/bin/easy_install biopython
+  lineinfile: dest=~/.bashrc
+              insertafter=EOF
+              line="export PATH=$HOME/Mobyle/Tools:$HOME/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
 
-- name: libxml2 Download
+- name: add aliases
   become: yes
   become_user: mobyle
-  get_url:  url= dest=~/src/
+  blockinfile:
+    dest: ~/.bashrc
+    insertafter: EOF
+    content: |
+      alias job_count='grep "<job id=" .session.xml | wc -l'
+      alias data_count="grep  -e '<data .*id=' .session.xml |wc -l"
+      alias mobjobs='cat ~/web/mobyle/log/mobyle/access_log | awk "{ print \"...\", \$2, \$3 }" | uniq -c'
+      alias mobprog='cat ~/web/mobyle/log/mobyle/access_log | awk "{ print \"...\", \$6 }" | sort | uniq -c | sort -k 1 -n'
+      alias mobuser='cat ~/web/mobyle/log/mobyle/access_log | awk "{ print \"...\", \$8 }" | sort | uniq -c | sort -k 1 -n'
 
-- name: libxml2 Extract
+- name: Copy htaccess
   become: yes
   become_user: mobyle
-  unarchive: src=~/src/ dest=~/src creates=~/src/ copy=no
+  copy: src=files/htaccess dest=~/web/htdocs/.htaccess
+     owner=mobyle
+     group=mobyle
+     mode=0644
 
-- name: libxml2 configure
-  become: yes
-  become_user: mobyle
-  command: ./configure --prefix={{mobyle_home.stdout}} chdir=~/src/ creates=Makefile
-
-- name: libxml2 make
-  become: yes
-  become_user: mobyle
-  command: make chdir=~/src/
-
-- name: libxml2 Install
-  become: yes
-  become_user: mobyle
-  command: make install chdir=~/src/
+- name: Configure Mobyle vhost
+  template: src=templates/mobyle.conf dest=/etc/httpd/conf.d/mobyle.conf mode=0644

@@ -20,4 +20,4 @@
     - {role: pygraphviz, tags: ['pygraphviz']}
     - {role: golden, tags: ['golden']}
     - {role: squizz, tags: ['squizz']}
-   # - {role: mobyle, tags: ['mobyle']}
+    - {role: mobyle, tags: ['mobyle']}
