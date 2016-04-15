@@ -17,8 +17,7 @@
     - {role: dnspython, tags: ['dns']}
     - {role: python-drmaa, tags: ['py-drmaa']}
     - {role: pillow, tags: ['pillow']}
-    - {role: graphviz, tags: ['graphviz']}
-   # - {role: pygraphviz, tags: ['pygraphviz']}
+    - {role: pygraphviz, tags: ['pygraphviz']}
    # - {role: golden, tags: ['golden']}
    # - {role: squizz, tags: ['squizz']}
    # - {role: mobyle, tags: ['mobyle']}

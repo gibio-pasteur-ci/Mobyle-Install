@@ -10,3 +10,4 @@
    - libjpeg-turbo-devel.x86_64 # needed by pillow
    - freetype-devel.x86_64 # needed by pillow
    - libpng-devel.x86_64 # needed by pillow
+   - graphviz-devel.x86_64 # needed by pygraphviz
