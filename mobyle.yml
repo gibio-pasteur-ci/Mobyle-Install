@@ -19,5 +19,5 @@
     - {role: pillow, tags: ['pillow']}
     - {role: pygraphviz, tags: ['pygraphviz']}
     - {role: golden, tags: ['golden']}
-   # - {role: squizz, tags: ['squizz']}
+    - {role: squizz, tags: ['squizz']}
    # - {role: mobyle, tags: ['mobyle']}

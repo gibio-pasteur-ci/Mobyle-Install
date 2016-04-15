@@ -1,0 +1,33 @@
+---
+- name: register mobyle_home
+  become: yes
+  become_user: mobyle
+  shell: grep '^mobyle' /etc/passwd | cut -d ':' -f6
+  changed_when: false
+  register: mobyle_home
+
+- name: Squizz Download
+  become: yes
+  become_user: mobyle
+  get_url: url=ftp://ftp.pasteur.fr/pub/gensoft/projects/squizz/squizz-0.99c.tar.gz dest=~/src/
+
+- name: Squizz Unarchive
+  become: yes
+  become_user: mobyle
+  unarchive: src=~/src/squizz-0.99c.tar.gz dest=~/src creates=~/src/squizz-0.99c copy=no
+
+- name: Squizz configure
+  become: yes
+  become_user: mobyle
+  command: ./configure --prefix={{mobyle_home.stdout}} chdir=~/src/squizz-0.99c creates=Makefile
+
+- name: Squizz make
+  become: yes
+  become_user: mobyle
+  command: make chdir=~/src/squizz-0.99c
+
+- name: Squizz Install
+  become: yes
+  become_user: mobyle
+  command: make install chdir=~/src/squizz-0.99c
+
