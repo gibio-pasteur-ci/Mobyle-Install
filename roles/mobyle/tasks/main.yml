@@ -1,117 +1,90 @@
 ---
 - name: register mobyle_home
   become: yes
-  become_user: "{{ mobyle_user }}"
-  shell: grep '^{{ mobyle_user }}' /etc/passwd | cut -d ':' -f6
+  become_user: mobyle
+  shell: grep '^mobyle' /etc/passwd | cut -d ':' -f6
   changed_when: false
   register: mobyle_home
 
 - name: Set mobyle_home in facts
   set_fact: mobyle_home="{{ mobyle_home.stdout }}"
 
-- debug: var=mobyle_home
-
 - name: Mobyle Download
   become: yes
-  become_user: "{{ mobyle_user }}"
+  become_user: mobyle
   get_url: url=ftp://ftp.pasteur.fr/pub/gensoft/projects/mobyle/Mobyle+BMPS-1.5.5.tar.gz dest=~/src/
 
 
 - name: Mobyle Unarchive
   become: yes
-  become_user: "{{ mobyle_user }}"
+  become_user: mobyle
   unarchive: src=~/src/Mobyle+BMPS-1.5.5.tar.gz dest=~/src creates=~/src/obyle+BMPS-1.5.5 copy=no
 
 - name: Mobyle Build
   become: yes
-  become_user: "{{ mobyle_user }}"
+  become_user: mobyle
   command: ~/bin/python setup.py build chdir=~/src/Mobyle+BMPS-1.5.5
 
 - name: Add install_core in setup.cfg
   become: yes
-  become_user: "{{ mobyle_user }}"
+  become_user: mobyle
   ini_file: dest=~/src/Mobyle+BMPS-1.5.5/setup.cfg
             section=install
             option=install_core value={{ mobyle_home }}/Mobyle
 
 - name: Add install_cgis in setup.cfg
   become: yes
-  become_user: "{{ mobyle_user }}"
+  become_user: mobyle
   ini_file: dest=~/src/Mobyle+BMPS-1.5.5/setup.cfg
             section=install
             option=install_cgis value={{ mobyle_home }}/web/cgi-bin
 
 - name: Add install_htdocs in setup.cfg
   become: yes
-  become_user: "{{ mobyle_user }}"
+  become_user: mobyle
   ini_file: dest=~/src/Mobyle+BMPS-1.5.5/setup.cfg
             section=install
             option=install_htdocs value={{ mobyle_home }}/web/htdocs
 
 - name: Add install_bmps in setup.cfg
   become: yes
-  become_user: "{{ mobyle_user }}"
+  become_user: mobyle
   ini_file: dest=~/src/Mobyle+BMPS-1.5.5/setup.cfg
             section=install
             option=install_bmps value=1
 
 - name: Mobyle Install
   become: yes
-  become_user: "{{ mobyle_user }}"
+  become_user: mobyle
   command: ~/bin/python setup.py install chdir=~/src/Mobyle+BMPS-1.5.5
 
 - name: Modify PATH
   become: yes
-  become_user: "{{ mobyle_user }}"
+  become_user: mobyle
   lineinfile: dest=~/.bashrc
               insertafter=EOF
               line="export PATH=$HOME/Mobyle/Tools:$HOME/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
 
 - name: add aliases
   become: yes
-  become_user: "{{ mobyle_user }}"
+  become_user: mobyle
   blockinfile:
     dest: ~/.bashrc
     insertafter: EOF
     content: |
       alias job_count='grep "<job id=" .session.xml | wc -l'
       alias data_count="grep  -e '<data .*id=' .session.xml |wc -l"
-      alias mobjobs='cat ~/web/log/mobyle/access_log | awk "{ print \"...\", \$2, \$3 }" | uniq -c'
-      alias mobprog='cat ~/web/log/mobyle/access_log | awk "{ print \"...\", \$6 }" | sort | uniq -c | sort -k 1 -n'
-      alias mobuser='cat ~/web/log/mobyle/access_log | awk "{ print \"...\", \$8 }" | sort | uniq -c | sort -k 1 -n'
+      alias mobjobs='cat ~/web/mobyle/log/mobyle/access_log | awk "{ print \"...\", \$2, \$3 }" | uniq -c'
+      alias mobprog='cat ~/web/mobyle/log/mobyle/access_log | awk "{ print \"...\", \$6 }" | sort | uniq -c | sort -k 1 -n'
+      alias mobuser='cat ~/web/mobyle/log/mobyle/access_log | awk "{ print \"...\", \$8 }" | sort | uniq -c | sort -k 1 -n'
 
-- name: Configure htaccess
+- name: Copy htaccess
   become: yes
-  become_user: "{{ mobyle_user }}"
-  template: src=templates/htaccess.j2 dest=~/web/htdocs/.htaccess
-            owner=mobyle
-            group=mobyle
-            mode=0644
+  become_user: mobyle
+  copy: src=files/htaccess dest=~/web/htdocs/.htaccess
+     owner=mobyle
+     group=mobyle
+     mode=0644
 
 - name: Configure Mobyle vhost
-  template: src=templates/apache_mobyle.conf.j2 dest=/etc/httpd/conf.d/mobyle.conf mode=0644
-
-- name: Configure cron
-  template: src=templates/apache_mobyle.conf.j2 dest=/etc/httpd/conf.d/mobyle.conf mode=0644
-
-- name: Copy monh-log
-  become: yes
-  become_user: "{{ mobyle_user }}"
-  copy: src=files/month-log dest=~/bin
-        mode=0755
-        owner=mobyle
-        group=mobyle
-
-- name: Copy week-log
-  become: yes
-  become_user: "{{ mobyle_user }}"
-  copy: src=files/week-log dest=~/bin
-        mode=755
-        owner="{{ mobyle_user }}"
-        group="{{ mobyle_group }}"
-
-- name: Configure Mobyle
-  become: yes
-  become_user: "{{ mobyle_user }}
-  template: src=templates/Cpnfig.py.j2 dest=~/Mobyle/Local/Config/Config.py
-            mode=0644
+  template: src=templates/mobyle.conf dest=/etc/httpd/conf.d/mobyle.conf mode=0644
