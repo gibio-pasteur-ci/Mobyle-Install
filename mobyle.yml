@@ -1,6 +1,6 @@
 ---
 - name: Install Mobyle and its dependancies
-  hosts: ifb
+  hosts: mobyle
   remote_user: root
 
   roles:
