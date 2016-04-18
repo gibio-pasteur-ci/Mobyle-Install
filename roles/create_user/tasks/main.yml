@@ -4,17 +4,17 @@
 
 - name: register mobyle_home
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   shell: grep '^mobyle' /etc/passwd | cut -d ':' -f6
   changed_when: false
   register: mobyle_home
 
 - name: Create src directory
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   file: path=~/src/ state=directory
 
 #- name: Modify PATH
 #  become: yes
-#  become_user: mobyle
+#  become_user: "{{ mobyle_user }}"
 #  lineinfile: dest=~/.bashrc insertafter=EOF line="export PATH=$HOME/bin:$PATH"

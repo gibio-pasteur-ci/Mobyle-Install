@@ -2,7 +2,7 @@
 
 - name: BioPython Install
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   command: ~/bin/easy_install biopython
 
 

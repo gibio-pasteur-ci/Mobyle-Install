@@ -2,20 +2,20 @@
 
 - name: setuptools Download
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   get_url:  url=https://pypi.python.org/packages/source/s/setuptools/setuptools-20.7.0.tar.gz#md5=5d12b39bf3e75e80fdce54e44b255615 dest=~/src/
 
 - name: setuptools Extract
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   unarchive: src=~/src/setuptools-20.7.0.tar.gz dest=~/src creates=~/src/setuptools-20.7.0 copy=no
 
 - name: setuptools Build
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   shell: ~/bin/python setup.py build  chdir=~/src/setuptools-20.7.0
 
 - name: setuptools Install
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   command: ~/bin/python setup.py install chdir=~/src/setuptools-20.7.0

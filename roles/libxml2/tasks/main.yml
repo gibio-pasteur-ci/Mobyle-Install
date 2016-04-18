@@ -1,32 +1,32 @@
 ---
 - name: register mobyle_home
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   shell: grep '^mobyle' /etc/passwd | cut -d ':' -f6
   changed_when: false
   register: mobyle_home
 
 - name: libxml2 Download
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   get_url:  url=ftp://xmlsoft.org/libxml2/LATEST_LIBXML2_IS_2.9.3 dest=~/src/
 
 - name: libxml2 Extract
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   unarchive: src=~/src/LATEST_LIBXML2_IS_2.9.3 dest=~/src creates=~/src/libxml2-2.9.3 copy=no
 
 - name: libxml2 configure
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   command: ./configure --prefix={{mobyle_home.stdout}} --without-python chdir=~/src/libxml2-2.9.3 creates=Makefile
 
 - name: libxml2 make
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   command: make chdir=~/src/libxml2-2.9.3
 
 - name: libxml2 Install
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   command: make install chdir=~/src/libxml2-2.9.3

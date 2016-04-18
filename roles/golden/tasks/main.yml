@@ -1,33 +1,33 @@
 ---
 - name: register mobyle_home
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   shell: grep '^mobyle' /etc/passwd | cut -d ':' -f6
   changed_when: false
   register: mobyle_home
 
 - name: Golden Download
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   get_url: url=ftp://ftp.pasteur.fr/pub/gensoft/projects/golden/golden-1.1a.tar.gz dest=~/src/
 
 - name: Golden Unarchive
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   unarchive: src=~/src/golden-1.1a.tar.gz dest=~/src creates=~/src/golden-1.1a copy=no
 
 - name: Golden configure
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   command: ./configure --prefix={{mobyle_home.stdout}} chdir=~/src/golden-1.1a creates=Makefile
 
 - name: Golden make
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   command: make chdir=~/src/golden-1.1a
 
 - name: Golden Install
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   command: make install chdir=~/src/golden-1.1a
 

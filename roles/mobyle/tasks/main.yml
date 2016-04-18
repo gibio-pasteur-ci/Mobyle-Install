@@ -1,7 +1,7 @@
 ---
 - name: register mobyle_home
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   shell: grep '^mobyle' /etc/passwd | cut -d ':' -f6
   changed_when: false
   register: mobyle_home
@@ -11,63 +11,63 @@
 
 - name: Mobyle Download
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   get_url: url=ftp://ftp.pasteur.fr/pub/gensoft/projects/mobyle/Mobyle+BMPS-1.5.5.tar.gz dest=~/src/
 
 
 - name: Mobyle Unarchive
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   unarchive: src=~/src/Mobyle+BMPS-1.5.5.tar.gz dest=~/src creates=~/src/obyle+BMPS-1.5.5 copy=no
 
 - name: Mobyle Build
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   command: ~/bin/python setup.py build chdir=~/src/Mobyle+BMPS-1.5.5
 
 - name: Add install_core in setup.cfg
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   ini_file: dest=~/src/Mobyle+BMPS-1.5.5/setup.cfg
             section=install
             option=install_core value={{ mobyle_home }}/Mobyle
 
 - name: Add install_cgis in setup.cfg
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   ini_file: dest=~/src/Mobyle+BMPS-1.5.5/setup.cfg
             section=install
             option=install_cgis value={{ mobyle_home }}/web/cgi-bin
 
 - name: Add install_htdocs in setup.cfg
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   ini_file: dest=~/src/Mobyle+BMPS-1.5.5/setup.cfg
             section=install
             option=install_htdocs value={{ mobyle_home }}/web/htdocs
 
 - name: Add install_bmps in setup.cfg
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   ini_file: dest=~/src/Mobyle+BMPS-1.5.5/setup.cfg
             section=install
             option=install_bmps value=1
 
 - name: Mobyle Install
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   command: ~/bin/python setup.py install chdir=~/src/Mobyle+BMPS-1.5.5
 
 - name: Modify PATH
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   lineinfile: dest=~/.bashrc
               insertafter=EOF
               line="export PATH=$HOME/Mobyle/Tools:$HOME/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
 
 - name: add aliases
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   blockinfile:
     dest: ~/.bashrc
     insertafter: EOF
@@ -80,11 +80,11 @@
 
 - name: Copy htaccess
   become: yes
-  become_user: mobyle
-  copy: src=files/htaccess dest=~/web/htdocs/.htaccess
+  become_user: "{{ mobyle_user }}"
+  template: src=templates/htaccess.j2 dest=~/web/htdocs/.htaccess
      owner=mobyle
      group=mobyle
      mode=0644
 
 - name: Configure Mobyle vhost
-  template: src=templates/mobyle.conf dest=/etc/httpd/conf.d/mobyle.conf mode=0644
+  template: src=templates/apache_mobyle.conf.j2 dest=/etc/httpd/conf.d/mobyle.conf mode=0644

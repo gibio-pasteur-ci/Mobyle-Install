@@ -1,33 +1,33 @@
 ---
 - name: register mobyle_home
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   shell: grep '^mobyle' /etc/passwd | cut -d ':' -f6
   changed_when: false
   register: mobyle_home
 
 - name: Python Download
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   get_url: url=https://www.python.org/ftp/python/2.7.11/Python-2.7.11.tgz dest=~/src/
 
 - name: Python Unarchive
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   unarchive: src=~/src/Python-2.7.11.tgz dest=~/src creates=~/src/Python-2.7.11 copy=no
 
 - name: Python configure
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   command: ./configure --prefix={{mobyle_home.stdout}} chdir=~/src/Python-2.7.11 creates=Makefile
 
 - name: Python make
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   command: make chdir=~/src/Python-2.7.11
 
 - name: Python Install
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   command: make install chdir=~/src/Python-2.7.11
 

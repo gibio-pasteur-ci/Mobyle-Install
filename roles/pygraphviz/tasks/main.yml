@@ -2,20 +2,20 @@
 
 - name: PyGraphViz Download
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   get_url:  url=https://pypi.python.org/packages/source/p/pygraphviz/pygraphviz-1.3.1.tar.gz#md5=7f690295dfe77edaa9e552d09d98d279 dest=~/src/
 
 - name: PyGraphViz Extract
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   unarchive: src=~/src/pygraphviz-1.3.1.tar.gz dest=~/src creates=~/src/pygraphviz-1.3.1 copy=no
 
 - name: PyGraphViz build
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   command: ~/bin/python setup.py build  chdir=~/src/pygraphviz-1.3.1
 
 - name: PyGraphViz Install
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   command: ~/bin/python setup.py install chdir=~/src/pygraphviz-1.3.1

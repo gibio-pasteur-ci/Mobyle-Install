@@ -2,21 +2,21 @@
 
 - name: SimpleTal Download
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   get_url: url=https://www.owlfish.com/software/simpleTAL/downloads/SimpleTAL-4.3.tar.gz dest=~/src/
 
 - name: SimpleTal Unarchive
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   unarchive: src=~/src/SimpleTAL-4.3.tar.gz dest=~/src creates=~/src/SimpleTAL-4.3 copy=no
 
 - name: SimpleTal Build
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   command: ~/bin/python setup.py build chdir=~/src/SimpleTAL-4.3
 
 - name: SimpleTal Install
   become: yes
-  become_user: mobyle
+  become_user: "{{ mobyle_user }}"
   command: ~/bin/python setup.py install chdir=~/src/SimpleTAL-4.3
 
