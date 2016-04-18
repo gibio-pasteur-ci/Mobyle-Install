@@ -1,0 +1,5 @@
+[mobyle]
+192.54.201.81
+
+[targets]
+localhost              ansible_connection=local

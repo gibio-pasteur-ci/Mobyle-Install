@@ -1,0 +1,8 @@
+---
+
+mobyle_user: mobyle
+mobyle_group: mobyle
+server_name: mobyle.pasteur.fr
+mobyle_admin: mobyle-adm@pasteur.fr
+root_url: http://mobyle.pasteur.fr
+help: mobyle@pasteur.fr
