@@ -1,0 +1,7 @@
+
+# Rotate logs
+0 0 1 * * {{ mobyle_user }} $HOME/bin/month-log
+0 0 * * 1 {{ mobyle_user }} $HOME/bin/week-log
+
+# Clean finished Mobyle jobs and anonymous sessions without any jobs inside
+0 5 * * * {{ mobyle_user }} $HOME/Mobyle/Tools/mobclean -v -l $HOME/web/mobyle/log/mobyle/cleaner_log

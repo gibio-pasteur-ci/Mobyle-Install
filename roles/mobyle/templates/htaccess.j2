@@ -1,0 +1,29 @@
+AddType text/plain .pdb
+
+Order allow,deny
+Allow from all
+#tentative d'injection de code 22/03/2012 (bertrand)
+Deny from 46.21.144.176 
+
+RewriteEngine on
+
+# Temporary disable ...
+#RewriteCond	%{REMOTE_ADDR}	!^{{ ansible_eth0.ipv4.address }}
+#RewriteCond	%{REQUEST_URI}	!/mobyle_maintenance.html
+#RewriteRule	.*		/mobyle_maintenance.html [R,L]
+
+# Do not show hidden files content
+RewriteCond     %{REQUEST_URI}  /\. [OR]
+RewriteCond     %{REQUEST_URI}  /ADMINDIR
+RewriteRule     .*              - [F,L]
+
+RewriteCond     %{SERVER_NAME}	{{ server_name }}
+RewriteCond     %{REQUEST_URI}  ^/$
+RewriteRule	.*		/cgi-bin/portal.py [R,L]
+
+# Allow saving results
+RewriteCond	%{REQUEST_URI}	^/data/jobs
+RewriteCond	%{QUERY_STRING}	^save$
+RewriteRule	^(.*)/([^/]+)$	- [E=SAVEDFILENAME:$2]
+Header		set Content-Disposition "attachment; filename=\"%{SAVEDFILENAME}e\"" env=SAVEDFILENAME
+

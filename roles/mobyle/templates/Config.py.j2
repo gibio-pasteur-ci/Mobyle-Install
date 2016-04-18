@@ -1,0 +1,544 @@
+import os , os.path
+# this a python module the syntax used is the python syntax
+
+
+############################################
+#                                          #
+#            Mandatory values              #
+#                                          #
+############################################
+
+
+# the root url of mobyle 
+ROOT_URL = "{{ root_url }}"
+
+CGI_PREFIX = '/cgi-bin'
+HTDOCS_PREFIX =''
+
+#########
+#       #
+# mails #
+#       #
+#########
+
+#a list of email adresses who will recieved messages when problems occur
+MAINTAINER = [ "{{ mobyle_admin }}" ]
+
+#the meail address where the user could ask some help
+HELP="{{ help }}"
+
+# local mailhost
+MAILHOST= "localhost"
+
+##################
+#                #
+# queuing system #
+#                # 
+##################
+
+from Execution import  *
+EXECUTION_SYSTEM_ALIAS = {
+                          'SGE'         : SGEConfig( root = '/pasteur/services/soge', cell= 'default' ) ,
+                          'SYS'         : SYSConfig() , 
+                          'SGE_DRMAA'   : SgeDRMAAConfig( '/pasteur/services/soge/lib/lx-amd64/libdrmaa.so' , root = '/pasteur/services/soge' , cell = 'default' ) ,
+                          '6-12-slots'  : SgeDRMAAConfig( '/pasteur/services/soge/lib/lx-amd64/libdrmaa.so' ,
+                                                          root = '/pasteur/services/soge',
+                                                          cell = 'default',
+                                                          nativeSpecification = ' -pe thread 6-12 '),
+                          '1-12-slots'  : SgeDRMAAConfig( '/pasteur/services/soge/lib/lx-amd64/libdrmaa.so' ,
+                                                          root = '/pasteur/services/soge',
+                                                          cell = 'default',
+                                                          nativeSpecification = ' -pe thread 1-12 ' )		
+	}
+
+from Mobyle.Dispatcher import DefaultDispatcher
+
+DISPATCHER = DefaultDispatcher( {'cas_finder': (EXECUTION_SYSTEM_ALIAS[ '6-12-slots' ], 'mobyle'),
+                                 'txsscan': (EXECUTION_SYSTEM_ALIAS[ '6-12-slots' ], 'mobyle'),
+                                 'integron_finder': (EXECUTION_SYSTEM_ALIAS[ '1-12-slots' ], 'mobyle'), 
+                                 'DEFAULT'   : ( EXECUTION_SYSTEM_ALIAS[ 'SGE_DRMAA' ] ,  'mobyle' )
+                           } )
+
+#the absolute path to the module shell init script
+MODULE_INIT = "/local/gensoft2/adm/etc/profile.d/modules.sh"
+
+MODULE_LOAD = { 'blast2mydb': "module load %(PACK_NAME)s/%(PACK_VERS)s html4blast/1.7a", #html4blast est dans un autre module
+                'blast2' : "module load %(PACK_NAME)s/%(PACK_VERS)s html4blast/1.7a",
+                'psiblast' : "module load %(PACK_NAME)s/%(PACK_VERS)s html4blast/1.7a", 
+                'bionj' : "module load %(PACK_NAME)s/NA",
+                'cosa' : "module load %(PACK_NAME)s/NA",
+                'mfold' : "module load %(PACK_NAME)s/3.6",
+                'treealign' : "module load %(PACK_NAME)s/NA",
+                'xpound' : "module load %(PACK_NAME)s/NA",
+                'comalign': "module load %(PACK_NAME)s/NA",
+                "primo" : "module load %(PACK_NAME)s/NA",
+                'bigorf_extract' : "module load scousin-tools/0.1",
+                'forest2consense' : "module load scousin-tools/0.1 newick-utils",
+                'fetchSequences': "module load EMBOSS",
+                'saxs_merge' : "module load IMP",
+                'nw_cat': None,
+                'CONJscan-T4SSscan': "module load hmmer/3.0; export PFAMDB=/mount/bioweb-prod/share/hmmdb",
+                'T3SSscan-FLAGscan': "module load hmmer/3.0; export PFAMDB=/mount/bioweb-prod/share/hmmdb",
+                'signalp': "module load %(PROG_NAME)s/%(PROG_VERS)s",
+                'tmhmm': "module load %(PROG_NAME)s/%(PROG_VERS)s",
+                'netChop' : "module load %(PROG_NAME)s/%(PROG_VERS)s",
+                'cas_finder' : "module load macsyfinder/%(PACK_VERS)s",
+                'txsscan' : "module load macsyfinder/%(PACK_VERS)s",
+                'integron_finder' : "module load Integron_Finder/%(PACK_VERS)s",
+                'DEFAULT': "module load %(PACK_NAME)s/%(PACK_VERS)s"
+                 }
+
+#######################
+#                     #
+#       logging       #
+#                     #
+#######################
+
+#the directory were will stored the log files
+LOGDIR = '{{ mobyle_home }}/web/log/mobyle'
+
+
+####################################################
+#                                                  #
+#    programs needed by the sequences format       #
+#          detection and conversion                # 
+#                                                  #
+####################################################
+
+# the 2 sequences conveter supported by Mobyle are
+# squizz and the java version of readseq
+# squizz is HIGHLY recommanded
+
+from Mobyle.Converter import *
+
+DATA_CONVERTER={
+      'Sequence': [ squizz_sequence('{{ mobyle_home }}/bin/squizz') ] ,
+      'Alignment': [ squizz_alignment('{{ mobyle_home }}/bin/squizz'),
+                    fasta_phyml(None),
+                    phylipi_phyml(None),
+                    phylips_phyml(None),
+                    clustal_phyml(None),
+                    nexus_phyml(None),
+                    stockholm_phyml(None)
+                  ]
+                }
+
+
+          ############################################################# 
+          ##                                                         ##
+          ##                    Optionals Values                     ##
+          ##                                                         ##
+          #############################################################
+
+
+#########
+#       #
+# Debug #
+#       #
+#########
+
+#used in production
+# 0    - the command line is build
+#      - the build log is NOT fill
+#      - the job is executed
+
+#to test a xml ( python syntax in code , precond ... )
+# 1    - the command line is build 
+#      - the build log is NOT fill
+#      - the job is NOT excuted
+
+#to know what's wrong in the xml I wrote.
+# 2    - the command line is build
+#      - the build log is fill
+#      - the job is NOT executed
+
+#to test the xml and the job execution and the results retrieving
+# 3    - the command line is build
+#      - the build log is fill
+#      - the job is executed
+
+DEBUG = 0 
+
+#to set a different debug level for a particular service
+#PARTICULAR_DEBUG = { 'service_name' : 3 }
+
+###############
+#             #
+# Directories #
+#             #
+###############
+
+# were are the binary corresponding to the services
+# a list of string
+# each element must be a valid path
+# the element order is kept to build the final PATH ( the binary path is add before the canonical PATH )
+
+#BINARY_PATH = [ "/mount/gensoft/scripts", "/mount/gensoft/bin", "/sbin" ] #path pour gensoft
+#BINARY_PATH = [ "/local/gensoft2/scripts", "/sbin" ] #path pour gensoft2 bin est positione par scripts
+BINARY_PATH = [ "/sbin" ] #Mobyle utilise module il n'a plus besoin des scripts
+
+#the path to the golden binary 
+#je squizz le warpper gensoft ( j'ai rajoute GOLDENDATA dans l'env apache
+#sinon il faudrait avoir gensoft/scripts et bin dans le path apache et donc hacker le scrit de demarrage d'apache
+
+
+DATABANKS_CONFIG = {
+    'embl':{
+            'dataType' : 'Sequence' ,
+            'bioTypes' : ['Nucleic','DNA'] ,   
+            'label'    : 'EMBL Nucleotide Sequence Database',
+            'command'  : ['{{ mobyle_home }}/bin/golden', '%(db)s:%(id)s']
+            },
+    'embl_wgs':{
+            'dataType' : 'Sequence' ,
+            'bioTypes' : ['Nucleic','DNA'] ,   
+            'label'    : 'EMBL Whole Genome Shotgun',
+            'command'  : ['{{ mobyle_home }}/bin/golden', '%(db)s:%(id)s']
+            },
+    'genbank':{
+               'dataType' : 'Sequence',
+               'bioTypes' : ['Nucleic','DNA'],
+               'label'    : 'Genbank NIH DNA sequence database',
+               'command': ['{{ mobyle_home }}/bin/golden', '%(db)s:%(id)s']
+               },
+    'genbank_wgsnuc':{
+               'dataType' : 'Sequence',
+               'bioTypes' : ['Nucleic'],
+               'label'    : 'Genbank Whole Genome Shotgun Nucleic',
+               'command': ['{{ mobyle_home }}/bin/golden', '%(db)s:%(id)s']
+               },
+    'genbank_wgspro':{
+               'dataType' : 'Sequence',
+               'bioTypes' : ['Protein'],
+               'label'    : 'Genbank Whole Genome Shotgun Proteic',
+               'command': ['{{ mobyle_home }}/bin/golden', '%(db)s:%(id)s']
+               },
+    'imgt':{
+            'dataType' : 'Sequence',
+            'bioTypes' : ['Nucleic','DNA'],   
+            'label'    : 'IMGT - ImMunoGeneTics sequence database',
+            'command': ['{{ mobyle_home }}/bin/golden', '%(db)s:%(id)s']
+            },
+    'refseqn':{
+              'dataType' : 'Sequence',
+              'bioTypes' : ['Nucleic' , 'DNA'],    
+              'label'    : 'NCBI Reference Sequence (RefSeq) Database',
+              'command': ['{{ mobyle_home }}/bin/golden', '%(db)s:%(id)s']
+    },
+    'refseqp':{
+              'dataType' : 'Sequence',
+              'bioTypes' : ['Protein'],    
+              'label'    : 'NCBI Reference Sequence (RefSeq) Database',
+              'command': ['{{ mobyle_home }}/bin/golden', '%(db)s:%(id)s']
+    },
+    'uniprot':{ 
+               'dataType' : 'Sequence', 
+               'bioTypes' : ['Protein'], 
+               'label'    : 'UniprotKB - Universal Protein Knowlege Base',
+               'command': ['{{ mobyle_home }}/bin/golden', '%(db)s:%(id)s']
+    },
+  'epo':{
+               'dataType' : 'Sequence',
+               'bioTypes' : ['Nucleic'],
+               'label'    : 'European Patent Office',
+               'command': ['{{ mobyle_home }}/bin/golden', '%(db)s:%(id)s']
+    },
+  'rdpii':{
+               'dataType' : 'Sequence',
+               'bioTypes' : ['Nucleic'],
+               'label'    : 'Ribosomal Database Project II database',
+               'command': ['{{ mobyle_home }}/bin/golden', '%(db)s:%(id)s']
+    }
+
+    }
+
+
+#PREVIEW_DATA_LIMIT =  1048576 
+
+GACODE = 'UA-15305936-2'
+######################
+#                    #
+#   Authentication   #
+#                    #
+######################
+
+
+# to make email optional for all programs, set this to True
+# default value = True
+#OPT_EMAIL = False
+# to have a more control on the mandatory email
+# it able to have the general option but
+# it could be set to another value for particular service
+# exemple :
+# OPT_EMAIL could be set at False ( the email is mandatory )
+# but set a True for some very short services.
+
+#PARTICULAR_OPT_EMAIL = {'golden' : True }
+
+#anonymous session there is 3 available values 
+# no      : the anonymous sessions are not allowed
+# yes     : the anonymous sessions are allowed, without any verification 
+# captcha : the anonymous sessions are allowed, but with a captcha challenge ( default )
+#ANONYMOUS_SESSION = "captcha"
+
+
+#authenticated session there is 3 available values
+# 'no'    : the authenticated session are not allowed.
+# 'yes'   : the authenticated session are allowed and activated without any restriction.
+# 'email' : the authenticated session are allowed but an email confirmation is needed to activate it (default).
+
+#AUTHENTICATED_SESSION = "email"
+#AUTHENTICATED_SESSION = 'yes'
+
+##############
+#            #
+#    misc    #
+#            #
+##############
+
+#WELCOME_CONFIG to configuer the welcome page of the portal
+#WELCOME_CONFIG is a dictionnary with 2 entries:
+#  -'format': with 2 avalaible values:
+#                      - 'html' if the url point out an html page
+#                      - 'atom' if the url point out an file in atom format
+#    -'url' : point toward rthe document to include in the portal welcome page
+               
+WELCOME_CONFIG= { 'format': 'html' ,
+                  'url': 'http://mobyle.pasteur.fr/portal/html/welcome_page.html'
+                 }
+
+SIMPLE_FORMS=True
+
+# refresh frequency for user data in the web portal, in seconds
+# default: 240
+#REFRESH_FREQUENCY = 240
+REFRESH_FREQUENCY = 360
+
+# max size for any file (2 Go )
+#FILELIMIT = 2147483648
+FILELIMIT = 536870912
+
+# max size for a session in bytes ( default = 50Mo = 52428800 )
+#SESSIONLIMIT = 52428800 
+#SESSIONLIMIT=157286400 #150Mo
+SESSIONLIMIT=262144000 #250Mo raised on May 10th to solve a "pipe problem" for D.Clermont (#45125)
+
+#max size to preview the results 
+#if the results size exceed this limit the results appear as a link ( default value = 1048576 = 1Mib )
+#PREVIEW_DATA_LIMIT=1048576
+
+#the number of "similar" jobs a user is allowed to submit at a given time.
+#similar means same email, same command line. ( default = 1 )
+#0 disable this control, then the user may submit as many "same" jobs he wants.
+#if the email is not provided (depend of the configuration) this control is disabled.    
+
+# !! this new directive replace SIMULTANEOUS_JOBS !!
+MAX_SIMILAR_JOB_PER_USER = 1
+
+
+#the number of jobs than a user can submit at a given time
+#0 disable this control, then the user may submit as many "same" jobs he wants (default).
+#if the email is not provided (depend of the configuration) this control is disabled.
+MAX_JOB_PER_USER = 10 
+
+##########
+#        #
+#  Mail  #
+#        #
+##########
+
+#from: sender email adresse ( default = HELP )
+SENDER = "mobyle-noreply@pasteur.fr"
+
+#set this True if you don't want results to be sent by email.
+#This does not make email optional
+#DONT_EMAIL_RESULTS = False
+
+# max size for results by email ( in bytes default 2 Mib )
+#MAXMAILSIZE = 2097152
+
+# how long should results be available on the server ( in days default = 10)?
+#RESULT_REMAIN = 10
+
+EMAIL_DELAY = 60
+
+# if you want to resolv the domain name of the user email
+# and if it has a mail exchanger field
+# (to avoid fake user email address)
+# by default DNS_RESOLVER = False
+# if DNS_RESOLVER = True dnspython must be installed
+
+DNS_RESOLVER = True
+
+
+################
+#              #
+#   logging    #
+#              #
+################
+
+# to monitored the elapsed time per job ( default = False )
+ACCOUNTING = True
+
+# CRITICAL      50
+# ERROR         40
+# WARNING       30
+# INFO          20 #dans session_log appel de Session addData removeData renameData 
+# DEBUG         10 #dans session_log tous les verrous de toutes les operations Session+transaction
+# NOTSET         0 # idem debug
+# None disable Session_DEBUG 
+
+SESSION_DEBUG= 20
+STATUS_DEBUG = False
+
+#######################
+#                     #
+# disabling services  #
+#                     #
+#######################
+
+
+## some times you need to disable the portal for maintaining operation etc...
+## if DISABLE_ALL is True no new job could be submit, but the running job keep running
+
+DISABLE_ALL = False
+#DISABLE_ALL = True
+
+## To disable specifically one service (program or workflow) from any portal, you can append it in  DISABLED_SERVICES.
+## joker can be used, so it's easy to disable all services from a given portal.
+## this portal is call 'local'
+## to re-enable services just toggle DISABLE_ALL to False or remove it from 
+## the DISABLED_SERVICES list
+## example:
+##DISABLED_SERVICES = [ 'portal1.service1' , # disable the service1 from the imported portal1 (as defined in PORTALS )
+##                      'portal2.*' ,        # disable all services from the imported portal2
+##                      'local.clustalw*'    # disable all services begining by clustalw (clutalw-multialign ,clustalw-sequence , clustalw-profile ) from this server.
+##                     ] 
+## By default all services are enabled
+
+#DISABLED_SERVICES = [ 'LIPM.*' , 'genouest.*' , 'cbs.*', 'local.transcript_or_bacteria_contig_analysis',] 
+DISABLED_SERVICES =[ 'local.transcript_or_bacteria_contig_analysis',
+		     'local.netOglyc' ,'local.netNglyc', 'local.targetp' #incompatibilte des binaires avec stockage 64bits
+                     'cbs.*'#  [Errno 110] Connection timed out
+		]
+
+
+################################
+#                              #
+# restriction services access  #
+#                              #
+################################
+
+
+#AUTHORIZED_SERVICES = {'dssp' : [ '157.99.60.92'] }
+
+
+# serviceName : [ ip , ip mask ]
+
+# the ip address which can use the service
+# ip syntax
+#
+# 'toppred' : [ '125.234.60.18' , # only the machine with this ip could acces to toppred
+#               '125.234.60.*'  , # all the machines in subnet could acces to toppred
+#               '125.234.*.15   , # all the machine 
+#             ] 
+#
+# if there is no entry for a service it's mean that
+# every body can acces to this service
+AUTHORIZED_SERVICES = {
+        'http://mobyle.pasteur.fr/data/services/servers/local/programs/dssp.xml'       : [ '157.99.*.*' ] ,
+        #'http://mobyle.pasteur.fr/data/services/servers/local/programs/blast2mydb.xml' : [ '157.99.*.*' , '41.242.101.2'] , # 41.242.101.2 => IP madagascar
+        'http://mobyle.pasteur.fr/data/services/servers/local/programs/blast2pgb.xml'  : [ '157.99.*.*', '142.76.1.62'  ],
+        'http://mobyle.pasteur.fr/data/services/servers/local/programs/detect_cnv.xml' : [ '157.99.60.*', '157.99.*.*' ],
+        'http://mobyle.pasteur.fr/data/services/servers/local/programs/hmmdebug.xml'   : [ '157.99.60.*' ],
+        'http://mobyle.pasteur.fr/data/services/servers/local/programs/sleep.xml'      : [ '157.99.60.*' ],
+        'http://mobyle.pasteur.fr/data/services/servers/local/programs/rnafold.xml'    : [ '157.99.60.*' ],
+        'http://mobyle.pasteur.fr/data/services/servers/local/programs/scangen.xml'    : [ '157.99.*.*'  ] ,
+        'http://mobyle.pasteur.fr/data/services/servers/local/programs/netchop.xml'    : [ '157.99.*.*'  ] ,
+        'http://mobyle.pasteur.fr/data/services/servers/local/programs/netNglyc.xml'   : [ '157.99.*.*'  ] ,
+        'http://mobyle.pasteur.fr/data/services/servers/local/programs/netOglyc.xml'   : [ '157.99.*.*'  ] ,
+        'http://mobyle.pasteur.fr/data/services/servers/local/programs/signalp.xml'    : [ '157.99.*.*'  ] ,
+        'http://mobyle.pasteur.fr/data/services/servers/local/programs/tmhmm.xml'      : [ '157.99.*.*'  ] ,
+        'http://mobyle.pasteur.fr/data/services/servers/local/programs/targetp.xml'    : [ '157.99.*.*'  ] ,
+        'http://mobyle.pasteur.fr/data/services/servers/local/programs/saxs_merge.xml'    : [ '157.99.*.*' ,#pasteur 
+                                                                                           '88.173.199.111' ,
+                                                                                           '134.79.32.*' ,  # SLAC 
+                                                                                           '134.79.34.*' ,  # SLAC 
+                                                                                           '169.230.90.*' , # UCSF Desktop
+                                                                                           '169.230.91.*' , # UCSF Desktop
+                                                                                           '169.230.79.*' , # UCSF Server
+                                                                                           '169.230.26.*' , # UCSF Server
+                                                                                           '169.230.228.*',  # UCSF Laptop
+                                                                                           '169.230.217.191',
+                                                                                          ],
+ }
+
+
+
+
+################################
+#                              #
+#     Services Management      #
+#                              #
+################################
+
+##################################################################################
+#                                                                                #
+# Local program installation section                                             #
+#                                                                                #
+# This configuration file is used to published the xml programs description on   # 
+# the Mobyle web part from the Mobyle/Local/Programs and Mobyle/Programs.        # 
+# all the xml from Local/Programs are published ( PROGRAMS_PATH in Config.py )   #
+# the xml from Programs are filtered following these rules                       #
+#                                                                                #
+# ( if this file doesn't exist all the programs from Programs were be published) # 
+#                                                                                #
+##################################################################################
+
+LOCAL_DEPLOY_INCLUDE = { 'programs' : [ '*' ] ,
+                          'workflows': [ '*' ] ,
+                          'viewers'  : [ '*' ] ,
+                          }
+
+LOCAL_DEPLOY_EXCLUDE = { 'programs' : [ 'stride' , 'gff2ps', 'lvb' , 'wublast2'] ,
+                          'workflows': ['transcript_or_bacteria_contig_analysis'] ,
+                          'viewers'  : [ '' ] ,
+                          }
+
+
+
+######################
+#                    #
+#    Grid aspects    #
+#                    #
+######################
+
+
+#PORTALS={'portal1': {
+#            'url': 'http://otherdomain.fr:port/cgi-bin/MobylePortal',
+#            'help' : 'help@otherdomain.fr',
+#            'repository': 'http://otherdomain.fr:port/MobyleData/programs',
+#            'programs': ['clustalw-multialign'],
+#            'jobsBase': 'http://otherdomain.fr:port/MobyleData/jobs'            
+#            }
+#        }
+
+## DESACTIVE le temps que ces server passe en 1.0 ##
+
+PORTAL_NAME = 'pasteur'
+
+PORTALS ={
+        'genouest': {
+                   'url': 'http://mobyle.genouest.org/cgi-bin/Mobyle/',
+                   'help' : 'olivier.sallou@irisa.fr',
+                   'repository': 'http://mobyle.genouest.org/Mobyle/',
+                   'services': { 'programs' :[ 'blast2' ]}
+        },
+}
+
+EXPORTED_SERVICES = ['clustalw-multialign','protein_distance_phylogeny',
+		             'pars', 'protpars', 'mix', 'fastdnaml', 'phyml', 'puzzle', 'bambe', 'clique', 'drawgram' , 'drawtree',
+                     'rbvotree' , 'getorf', 'blast2taxonomy', 'pdb2',  'pdb21','pdb22', 'pdb23'
+]
+
+

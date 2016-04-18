@@ -1,0 +1,27 @@
+#! /bin/sh
+
+PATH=/usr/bin:/bin
+export PATH
+
+target_files='access_log account_log cleaner_log error_log child_log'
+
+cd $HOME/web/log/mobyle || exit 1
+
+rev=`cat .month`
+
+## Save old files
+for file in $target_files
+do
+	mv $file $file.$rev
+	touch $file && chmod 644 $file
+done
+
+## Compress old files
+for file in $target_files
+do
+	chmod 640 $file.$rev && gzip $file.$rev
+done
+
+date +%Y%m >.month
+
+exit 0
