@@ -9,12 +9,12 @@
 - name: libxslt Download
   become: yes
   become_user: "{{ mobyle_user }}"
-  get_url:  url=ftp://xmlsoft.org/libxml2/LATEST_LIBXSLT_IS_1.1.28 dest=~/src/
+  get_url:  url=ftp://xmlsoft.org/libxml2/libxslt-1.1.28.tar.gz dest=~/src/
 
 - name: libxslt Extract
   become: yes
   become_user: "{{ mobyle_user }}"
-  unarchive: src=~/src/LATEST_LIBXSLT_IS_1.1.28 dest=~/src creates=~/src/libxslt-1.1.28 copy=no
+  unarchive: src=~/src/libxslt-1.1.28.tar.gz dest=~/src creates=~/src/libxslt-1.1.28 copy=no
 
 - name: libxslt configure
   become: yes
