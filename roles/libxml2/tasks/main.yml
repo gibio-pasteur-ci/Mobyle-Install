@@ -9,12 +9,12 @@
 - name: libxml2 Download
   become: yes
   become_user: "{{ mobyle_user }}"
-  get_url:  url=ftp://xmlsoft.org/libxml2/LATEST_LIBXML2_IS_2.9.3 dest=~/src/
+  get_url:  url=ftp://xmlsoft.org/libxml2/libxml2-2.9.3.tar.gz dest=~/src/
 
 - name: libxml2 Extract
   become: yes
   become_user: "{{ mobyle_user }}"
-  unarchive: src=~/src/LATEST_LIBXML2_IS_2.9.3 dest=~/src creates=~/src/libxml2-2.9.3 copy=no
+  unarchive: src=~/src/libxml2-2.9.3.tar.gz dest=~/src creates=~/src/libxml2-2.9.3 copy=no
 
 - name: libxml2 configure
   become: yes
