@@ -5,7 +5,7 @@ export PATH
 
 target_files='access_log account_log cleaner_log error_log child_log'
 
-cd $HOME/web/log/mobyle || exit 1
+cd $HOME/web/mobyle/log/mobyle || exit 1
 
 rev=`cat .month`
 
