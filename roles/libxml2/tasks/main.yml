@@ -9,7 +9,10 @@
 - name: libxml2 Download
   become: yes
   become_user: "{{ mobyle_user }}"
-  get_url:  url=ftp://xmlsoft.org/libxml2/libxml2-2.9.3.tar.gz dest=~/src/
+# because of bug https://github.com/ansible/ansible-modules-core/issues/3661
+# on ansible version 2.0.2.0 we can not use get_url : workaround use command
+# get_url: url=ftp://xmlsoft.org/libxml2/libxml2-2.9.3.tar.gz dest=~/src/
+  command: curl ftp://xmlsoft.org/libxml2/libxml2-2.9.3.tar.gz -o ~/src/libxml2-2.9.3.tar.gz
 
 - name: libxml2 Extract
   become: yes

@@ -9,7 +9,10 @@
 - name: Squizz Download
   become: yes
   become_user: "{{ mobyle_user }}"
-  get_url: url=ftp://ftp.pasteur.fr/pub/gensoft/projects/squizz/squizz-0.99c.tar.gz dest=~/src/
+# because of bug https://github.com/ansible/ansible-modules-core/issues/3661
+# on ansible version 2.0.2.0 we can not use get_url : workaround use command
+#  get_url: url=ftp://ftp.pasteur.fr/pub/gensoft/projects/squizz/squizz-0.99c.tar.gz dest=~/src/
+  command: curl ftp://ftp.pasteur.fr/pub/gensoft/projects/squizz/squizz-0.99c.tar.gz -o ~/src/squizz-0.99c.tar.gz
 
 - name: Squizz Unarchive
   become: yes
