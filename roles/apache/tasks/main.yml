@@ -1,0 +1,11 @@
+---
+- name: Install apache
+  yum: name=httpd state=installed
+  notify: start httpd
+
+
+- name: Ensure apache is running (and enable it at boot)
+  service: name=httpd state=started enabled=yes
+
+
+

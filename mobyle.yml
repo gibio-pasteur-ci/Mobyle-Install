@@ -20,4 +20,5 @@
     - {role: pygraphviz, tags: ['pygraphviz']}
     - {role: golden, tags: ['golden']}
     - {role: squizz, tags: ['squizz']}
+    - {role: apache, tags: ['apache']}
     - {role: mobyle, tags: ['mobyle']}
