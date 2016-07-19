@@ -1,18 +1,11 @@
 ---
-- name: register mobyle_home
-  become: yes
-  become_user: "{{ mobyle_user }}"
-  shell: grep '^mobyle' /etc/passwd | cut -d ':' -f6
-  changed_when: false
-  register: mobyle_home
-
 - name: libxml2 Download
   become: yes
   become_user: "{{ mobyle_user }}"
 # because of bug https://github.com/ansible/ansible-modules-core/issues/3661
 # on ansible version 2.0.2.0 we can not use get_url : workaround use command
 # get_url: url=ftp://xmlsoft.org/libxml2/libxml2-2.9.3.tar.gz dest=~/src/
-  command: curl ftp://xmlsoft.org/libxml2/libxml2-2.9.3.tar.gz -o ~/src/libxml2-2.9.3.tar.gz
+  command: curl ftp://xmlsoft.org/libxml2/libxml2-2.9.3.tar.gz -o ~/src/libxml2-2.9.3.tar.gz creates=~/src/libxml2-2.9.3.tar.gz
 
 - name: libxml2 Extract
   become: yes

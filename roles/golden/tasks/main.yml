@@ -1,11 +1,4 @@
 ---
-- name: register mobyle_home
-  become: yes
-  become_user: "{{ mobyle_user }}"
-  shell: grep '^mobyle' /etc/passwd | cut -d ':' -f6
-  changed_when: false
-  register: mobyle_home
-
 - name: Golden Download
   become: yes
   become_user: "{{ mobyle_user }}"

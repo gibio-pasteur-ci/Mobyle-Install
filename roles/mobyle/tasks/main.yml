@@ -1,14 +1,4 @@
 ---
-- name: register mobyle_home
-  become: yes
-  become_user: "{{ mobyle_user }}"
-  shell: grep '^mobyle' /etc/passwd | cut -d ':' -f6
-  changed_when: false
-  register: mobyle_home
-
-- name: Set mobyle_home in facts
-  set_fact: mobyle_home="{{ mobyle_home.stdout }}"
-
 - name: Mobyle Download
   become: yes
   become_user: "{{ mobyle_user }}"
