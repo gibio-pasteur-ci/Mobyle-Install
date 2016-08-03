@@ -1,0 +1,75 @@
+---
+- name: check presence of Mobyle programs interfaces
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  stat: path=~/src/Programs-5.1.2.tgz
+  register: mobyle_programs_archive
+
+- name: download programs interfaces
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  when: mobyle_programs_archive.stat.exists == False
+  command: curl ftp://ftp.pasteur.fr/pub/gensoft/projects/mobyle/Programs-5.1.2.tgz -o ~/src/Programs-5.1.2.tgz
+
+- name: Unarchive programs
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  unarchive: src=~/src/Programs-5.1.2.tgz dest=~/Mobyle/Services/ creates=~/Mobyle/Services/Programs-5.1.2 copy=no
+
+- name: Creating link to Programs
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  file:
+    src={{ mobyle_home }}/Mobyle/Services/Programs-5.1.2
+    dest={{ mobyle_home }}/Mobyle/Services/Programs
+    state=link
+
+- name: check presence of Mobyle Workflows interfaces
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  stat: path=~/src/Workflows-1.1.2.tgz
+  register: mobyle_workflows_archive
+
+- name: download workflows interfaces
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  when: mobyle_workflows_archive.stat.exists == False
+  command: curl ftp://ftp.pasteur.fr/pub/gensoft/projects/mobyle/Workflows-1.1.2.tgz -o ~/src/Workflows-1.1.2.tgz
+
+- name: Unarchive workflows
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  unarchive: src=~/src/Workflows-1.1.2.tgz dest=~/Mobyle/Services/ creates=~/Mobyle/Services/Workflows-1.1.2 copy=no
+
+- name: Creating link to Workflows
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  file:
+    src={{ mobyle_home }}/Mobyle/Services/Workflows-1.1.2
+    dest={{ mobyle_home }}/Mobyle/Services/Workflows
+    state=link
+
+- name: check presence of Mobyle Tutorials interfaces
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  stat: path=~/src/Tutorials-1.5.0.tar.gz
+  register: mobyle_tutorials_archive
+
+- name: download Tutorials interfaces
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  when: mobyle_tutorials_archive.stat.exists == False
+  command: curl ftp://ftp.pasteur.fr/pub/gensoft/projects/mobyle/Tutorials-1.5.0.tar.gz -o ~/src/Tutorials-1.5.0.tar.gz
+
+- name: Unarchive Tutorials
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  unarchive: src=~/src/Tutorials-1.5.0.tar.gz dest=~/Mobyle/Services/ creates=~/Mobyle/Services/Tutorials-1.5.0 copy=no
+
+- name: Creating link to Tutorials
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  file:
+    src={{ mobyle_home }}/Mobyle/Services/Tutorials-1.5.0
+    dest={{ mobyle_home }}/Mobyle/Services/Tutorials
+    state=link
