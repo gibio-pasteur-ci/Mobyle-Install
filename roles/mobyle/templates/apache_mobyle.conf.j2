@@ -10,7 +10,7 @@
 	CustomLog logs/mobyle_access_log combined
 	DirectoryIndex index.html index.xml
 	Options FollowSymLinks
-	ServerAdmin {{ mobyle_admin }}
+	ServerAdmin {{ mobyle_admin[0] }}
 	<Directory {{ mobyle_home }}/web>
 	    AllowOverride Limit FileInfo
 	</Directory>
