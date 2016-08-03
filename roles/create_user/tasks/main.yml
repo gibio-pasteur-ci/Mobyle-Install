@@ -8,7 +8,7 @@
 - name: Creation of "mobyle" user
   user:
     name={{ mobyle_user }}
-    group= {{ mobyle_group }}
+    group={{ mobyle_group }}
     comment="Mobyke application user"
     home={{ mobyle_home }}
     shell=/bin/bash
