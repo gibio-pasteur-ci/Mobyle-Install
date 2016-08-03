@@ -1,0 +1,9 @@
+---
+
+mobyle_user: mobyle
+mobyle_group: mobyle
+mobyle_home: /data/mobyle
+mobyle_server_name: mobyle.pasteur.ci
+mobyle_admin: "'kamfourier@pasteur.ci', 'kamfourier@gmail.com'"
+root_url: http://mobyle.pasteur.ci
+help: mobyle@pasteur.ci
