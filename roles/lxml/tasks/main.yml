@@ -3,9 +3,16 @@
 # the 3.5.0 version doesn not honored -I -L option so lxml is always linked to system libraries
 # the 2.3.1 is used by Mobyle in production from long time at pasteur so use this version
 
+- name: check presence of lxml archive
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  stat: path=~/src/lxml-2.3.1.tgz
+  register: lxml
+
 - name: libxml Download
   become: yes
   become_user: "{{ mobyle_user }}"
+  when: lxml.stat.exists == False
   get_url:  url=http://lxml.de/files/lxml-2.3.1.tgz dest=~/src/
 
 - name: libxml Extract
