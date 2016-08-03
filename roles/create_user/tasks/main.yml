@@ -6,7 +6,13 @@
     state=present
 
 - name: Creation of "mobyle" user
-  user: name={{ mobyle_user }} comment="Mobyke application user" home={{ mobyle_home }} shell=/bin/bash state=present
+  user:
+    name={{ mobyle_user }}
+    group= {{ mobyle_group }}
+    comment="Mobyke application user"
+    home={{ mobyle_home }}
+    shell=/bin/bash
+    state=present
 
 - name: Create src directory
   become: yes
