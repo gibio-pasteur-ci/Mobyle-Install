@@ -1,8 +1,19 @@
 ---
+
+- name: Creation of "mobyle" group
+  group:
+    name={{ mobyle_group }}
+    state=present
+
 - name: Creation of "mobyle" user
-  user: name=mobyle comment="Mobyke application user" home={{ mobyle_home }} shell=/bin/bash state=present
+  user: name={{ mobyle_user }} comment="Mobyke application user" home={{ mobyle_home }} shell=/bin/bash state=present
 
 - name: Create src directory
   become: yes
   become_user: "{{ mobyle_user }}"
-  file: path=~/src/ state=directory
+  file:
+    path={{ mobyle_home }}/src/
+    state=directory
+    owner={{ mobyle_user }}
+    group={{ mobyle_group }}
+    mode=775
