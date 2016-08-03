@@ -15,7 +15,7 @@
 - name: Golden configure
   become: yes
   become_user: "{{ mobyle_user }}"
-  command: ./configure --prefix={{mobyle_home.stdout}} chdir=~/src/golden-1.1a creates=Makefile
+  command: ./configure --prefix={{ mobyle_home }} chdir=~/src/golden-1.1a creates=Makefile
 
 - name: Golden make
   become: yes
