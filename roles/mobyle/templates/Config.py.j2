@@ -23,7 +23,7 @@ HTDOCS_PREFIX =''
 #########
 
 #a list of email adresses who will recieved messages when problems occur
-MAINTAINER = [ '{{ mobyle_admin | join(', ') }}' ]
+MAINTAINER = {{ mobyle_admin }}
 
 #the meail address where the user could ask some help
 HELP="{{ help }}"

@@ -1,7 +1,14 @@
 ---
+- name: check presence of Python archive
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  stat: path=~/src/Python-2.7.11.tgz
+  register: python_archive
+
 - name: Python Download
   become: yes
   become_user: "{{ mobyle_user }}"
+  when: python_archive.stat.exists == False
   get_url: url=https://www.python.org/ftp/python/2.7.11/Python-2.7.11.tgz dest=~/src/
 
 - name: Python Unarchive

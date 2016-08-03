@@ -1,8 +1,14 @@
 ---
+- name: check presence of SimpleTal archive
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  stat: path=~/src/SimpleTAL-4.3.tar.gz
+  register: simpletal_archive
 
 - name: SimpleTal Download
   become: yes
   become_user: "{{ mobyle_user }}"
+  when: simpletal_archive.stat.exists == False
   get_url: url=https://www.owlfish.com/software/simpleTAL/downloads/SimpleTAL-4.3.tar.gz dest=~/src/
 
 - name: SimpleTal Unarchive

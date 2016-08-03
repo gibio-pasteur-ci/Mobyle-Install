@@ -1,8 +1,14 @@
 ---
+- name: check presence of Pillow archive
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  stat: path=~/src/Pillow-3.2.0.tar.gz
+  register: pillow_archive
 
 - name: Pillow Download
   become: yes
   become_user: "{{ mobyle_user }}"
+  when: pillow_archive.stat.exists == False
   get_url: url=https://pypi.python.org/packages/source/P/Pillow/Pillow-3.2.0.tar.gz#md5=7cfd093c11205d9e2ebe3c51dfcad510 dest=~/src/
 
 - name: Pillow Unarchive

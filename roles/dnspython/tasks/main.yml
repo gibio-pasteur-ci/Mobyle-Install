@@ -1,8 +1,14 @@
 ---
+- name: check presence of dnspython archive
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  stat: path=~/src/dnspython-1.12.0.zip
+  register: dnspython_archive
 
 - name: dnspython Download
   become: yes
   become_user: "{{ mobyle_user }}"
+  when: dnspython_archive.stat.exists == False
   get_url: url=https://pypi.python.org/packages/source/d/dnspython/dnspython-1.12.0.zip#md5=bcfab8f4f4a2280f875e646502b23e66 dest=~/src/
 
 - name: dnspython Unarchive

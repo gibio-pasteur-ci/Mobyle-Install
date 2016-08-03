@@ -1,8 +1,14 @@
 ---
+- name: check presence of setuptools archive
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  stat: path=~/src/setuptools-20.7.0.tar.gz
+  register: setuptools_archive
 
 - name: setuptools Download
   become: yes
   become_user: "{{ mobyle_user }}"
+  when: setuptools_archive.stat.exists == False
   get_url:  url=https://pypi.python.org/packages/source/s/setuptools/setuptools-20.7.0.tar.gz#md5=5d12b39bf3e75e80fdce54e44b255615 dest=~/src/
 
 - name: setuptools Extract

@@ -7,12 +7,12 @@
   become: yes
   become_user: "{{ mobyle_user }}"
   stat: path=~/src/lxml-2.3.1.tgz
-  register: lxml
+  register: lxml_archive
 
 - name: libxml Download
   become: yes
   become_user: "{{ mobyle_user }}"
-  when: lxml.stat.exists == False
+  when: lxml_archive.stat.exists == False
   get_url:  url=http://lxml.de/files/lxml-2.3.1.tgz dest=~/src/
 
 - name: libxml Extract

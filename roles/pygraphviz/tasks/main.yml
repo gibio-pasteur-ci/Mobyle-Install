@@ -1,8 +1,14 @@
 ---
+- name: check presence of PyGraphViz archive
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  stat: path=~/src/pygraphviz-1.3.1.tar.gz
+  register: pygraphviz_archive
 
 - name: PyGraphViz Download
   become: yes
   become_user: "{{ mobyle_user }}"
+  when: pygraphviz_archive.stat.exists == False
   get_url:  url=https://pypi.python.org/packages/source/p/pygraphviz/pygraphviz-1.3.1.tar.gz#md5=7f690295dfe77edaa9e552d09d98d279 dest=~/src/
 
 - name: PyGraphViz Extract

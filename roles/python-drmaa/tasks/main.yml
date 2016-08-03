@@ -1,8 +1,14 @@
 ---
+- name: check presence of python-drmaa archive
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  stat: path=~/src/v0.7.6.tar.gz
+  register: pydrmaa_archive
 
 - name: python-drmaa Download
   become: yes
   become_user: "{{ mobyle_user }}"
+  when: pydrmaa_archive.stat.exists == False
   get_url: url=https://github.com/pygridtools/drmaa-python/archive/v0.7.6.tar.gz dest=~/src/
 
 - name: python-drmaa Unarchive

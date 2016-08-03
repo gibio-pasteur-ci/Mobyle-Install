@@ -1,8 +1,14 @@
 ---
+- name: check presence of Simplejson archive
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  stat: path=~/src/simplejson-3.8.2.tar.gz
+  register: simplejson_archive
 
 - name: Simplejson Download
   become: yes
   become_user: "{{ mobyle_user }}"
+  when: simplejson_archive.stat.exists == False
   get_url: url=https://pypi.python.org/packages/source/s/simplejson/simplejson-3.8.2.tar.gz#md5=53b1371bbf883b129a12d594a97e9a18 dest=~/src/
 
 
