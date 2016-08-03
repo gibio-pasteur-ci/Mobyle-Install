@@ -1,5 +1,5 @@
 # {{ ansible_managed }}
-<VirtualHost {{ mobyle_server_name }}>
+<VirtualHost *:80>
 	ServerName {{ mobyle_server_name }}
 	SetEnv http_proxy
 	DocumentRoot {{ mobyle_home }}/web/htdocs
