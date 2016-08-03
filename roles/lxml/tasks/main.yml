@@ -16,7 +16,7 @@
 - name: libxml build
   become: yes
   become_user: "{{ mobyle_user }}"
-  command: ~/bin/python setup.py build_ext -i -I {{mobyle_home.stdout}}/include/libxml2/ -L{{mobyle_home.stdout}}/lib/ --rpath={{mobyle_home.stdout}}/lib  --with-xslt-config={{mobyle_home.stdout}}/bin/xslt-config chdir=~/src/lxml-2.3.1
+  command: ~/bin/python setup.py build_ext -i -I {{ mobyle_home }}/include/libxml2/ -L{{ mobyle_home }}/lib/ --rpath={{ mobyle_home }}/lib  --with-xslt-config={{ mobyle_home }}/bin/xslt-config chdir=~/src/lxml-2.3.1
 
 - name: libxml Install
   become: yes
