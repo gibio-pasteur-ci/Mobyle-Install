@@ -17,7 +17,7 @@
 - name: Mobyle Unarchive
   become: yes
   become_user: "{{ mobyle_user }}"
-  unarchive: src=~/src/Mobyle+BMPS-1.5.5.tar.gz dest=~/src creates=~/src/obyle+BMPS-1.5.5 copy=no
+  unarchive: src=~/src/Mobyle+BMPS-1.5.5.tar.gz dest=~/src creates=~/src/Mobyle+BMPS-1.5.5 copy=no
 
 - name: Mobyle Build
   become: yes
