@@ -15,7 +15,7 @@
 - name: libxslt configure
   become: yes
   become_user: "{{ mobyle_user }}"
-  command: ./configure --prefix={{mobyle_home.stdout}} --without-python --with-libxml-prefix={{mobyle_home.stdout}} chdir=~/src/libxslt-1.1.28 creates=Makefile
+  command: ./configure --prefix={{ mobyle_home }} --without-python --with-libxml-prefix={{ mobyle_home }} chdir=~/src/libxslt-1.1.28 creates=Makefile
 
 - name: libxslt make
   become: yes

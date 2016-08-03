@@ -15,7 +15,7 @@
 - name: libxml2 configure
   become: yes
   become_user: "{{ mobyle_user }}"
-  command: ./configure --prefix={{mobyle_home.stdout}} --without-python chdir=~/src/libxml2-2.9.3 creates=Makefile
+  command: ./configure --prefix={{ mobyle_home }} --without-python chdir=~/src/libxml2-2.9.3 creates=Makefile
 
 - name: libxml2 make
   become: yes
