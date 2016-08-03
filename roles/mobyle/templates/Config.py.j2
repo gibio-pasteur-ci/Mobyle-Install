@@ -38,27 +38,11 @@ MAILHOST= "localhost"
 ##################
 
 from Execution import  *
-EXECUTION_SYSTEM_ALIAS = {
-                          'SGE'         : SGEConfig( root = '/pasteur/services/soge', cell= 'default' ) ,
-                          'SYS'         : SYSConfig() , 
-                          'SGE_DRMAA'   : SgeDRMAAConfig( '/pasteur/services/soge/lib/lx-amd64/libdrmaa.so' , root = '/pasteur/services/soge' , cell = 'default' ) ,
-                          '6-12-slots'  : SgeDRMAAConfig( '/pasteur/services/soge/lib/lx-amd64/libdrmaa.so' ,
-                                                          root = '/pasteur/services/soge',
-                                                          cell = 'default',
-                                                          nativeSpecification = ' -pe thread 6-12 '),
-                          '1-12-slots'  : SgeDRMAAConfig( '/pasteur/services/soge/lib/lx-amd64/libdrmaa.so' ,
-                                                          root = '/pasteur/services/soge',
-                                                          cell = 'default',
-                                                          nativeSpecification = ' -pe thread 1-12 ' )		
-	}
+EXECUTION_SYSTEM_ALIAS = {'SYS': SYSConfig() }
 
 from Mobyle.Dispatcher import DefaultDispatcher
 
-DISPATCHER = DefaultDispatcher( {'cas_finder': (EXECUTION_SYSTEM_ALIAS[ '6-12-slots' ], 'mobyle'),
-                                 'txsscan': (EXECUTION_SYSTEM_ALIAS[ '6-12-slots' ], 'mobyle'),
-                                 'integron_finder': (EXECUTION_SYSTEM_ALIAS[ '1-12-slots' ], 'mobyle'), 
-                                 'DEFAULT'   : ( EXECUTION_SYSTEM_ALIAS[ 'SGE_DRMAA' ] ,  'mobyle' )
-                           } )
+DISPATCHER = DefaultDispatcher({'DEFAULT'   : ( EXECUTION_SYSTEM_ALIAS[ 'SYS ] ,  '' )} )
 
 #the absolute path to the module shell init script
 MODULE_INIT = "/local/gensoft2/adm/etc/profile.d/modules.sh"
@@ -78,8 +62,6 @@ MODULE_LOAD = { 'blast2mydb': "module load %(PACK_NAME)s/%(PACK_VERS)s html4blas
                 'fetchSequences': "module load EMBOSS",
                 'saxs_merge' : "module load IMP",
                 'nw_cat': None,
-                'CONJscan-T4SSscan': "module load hmmer/3.0; export PFAMDB=/mount/bioweb-prod/share/hmmdb",
-                'T3SSscan-FLAGscan': "module load hmmer/3.0; export PFAMDB=/mount/bioweb-prod/share/hmmdb",
                 'signalp': "module load %(PROG_NAME)s/%(PROG_VERS)s",
                 'tmhmm': "module load %(PROG_NAME)s/%(PROG_VERS)s",
                 'netChop' : "module load %(PROG_NAME)s/%(PROG_VERS)s",
