@@ -4,7 +4,7 @@ mobyle_user: mobyle
 mobyle_group: mobyle
 mobyle_home: /data/mobyle
 mobyle_server_name: mobyle-ci.web.pasteur.fr
-mobyle_admin: "'kamfourier@pasteur.ci', 'kamfourier@gmail.com'"
+mobyle_admin: ['kamfourier@pasteur.ci', 'kamfourier@gmail.com']
 mobyle_email_sender: mobyle-noreply@pasteur.fr # mobyle-noreply@pasteur.ci
 root_url: http://mobyle-ci.web.pasteur.fr # http://mobyle.pasteur.ci
 help: bneron@pasteur.fr # mobyle@pasteur.ci
