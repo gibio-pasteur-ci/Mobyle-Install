@@ -42,7 +42,7 @@ EXECUTION_SYSTEM_ALIAS = {'SYS': SYSConfig() }
 
 from Mobyle.Dispatcher import DefaultDispatcher
 
-DISPATCHER = DefaultDispatcher({'DEFAULT'   : ( EXECUTION_SYSTEM_ALIAS[ 'SYS ] ,  '' )} )
+DISPATCHER = DefaultDispatcher({'DEFAULT'   : ( EXECUTION_SYSTEM_ALIAS[ 'SYS' ] ,  '' )} )
 
 #the absolute path to the module shell init script
 MODULE_INIT = "/local/gensoft2/adm/etc/profile.d/modules.sh"
@@ -238,7 +238,6 @@ DATABANKS_CONFIG = {
 
 #PREVIEW_DATA_LIMIT =  1048576 
 
-GACODE = 'UA-15305936-2'
 ######################
 #                    #
 #   Authentication   #
@@ -287,7 +286,7 @@ GACODE = 'UA-15305936-2'
 #    -'url' : point toward rthe document to include in the portal welcome page
                
 WELCOME_CONFIG= { 'format': 'html' ,
-                  'url': 'http://mobyle.pasteur.fr/portal/html/welcome_page.html'
+                  'url': '{{ root_url }}/portal/html/welcome_page.html'
                  }
 
 SIMPLE_FORMS=True
@@ -361,7 +360,7 @@ DNS_RESOLVER = True
 ################
 
 # to monitored the elapsed time per job ( default = False )
-ACCOUNTING = True
+# ACCOUNTING = True
 
 # CRITICAL      50
 # ERROR         40
@@ -371,8 +370,6 @@ ACCOUNTING = True
 # NOTSET         0 # idem debug
 # None disable Session_DEBUG 
 
-SESSION_DEBUG= 20
-STATUS_DEBUG = False
 
 #######################
 #                     #
@@ -400,10 +397,7 @@ DISABLE_ALL = False
 ## By default all services are enabled
 
 #DISABLED_SERVICES = [ 'LIPM.*' , 'genouest.*' , 'cbs.*', 'local.transcript_or_bacteria_contig_analysis',] 
-DISABLED_SERVICES =[ 'local.transcript_or_bacteria_contig_analysis',
-		     'local.netOglyc' ,'local.netNglyc', 'local.targetp' #incompatibilte des binaires avec stockage 64bits
-                     'cbs.*'#  [Errno 110] Connection timed out
-		]
+DISABLED_SERVICES =[]
 
 
 ################################
@@ -430,29 +424,12 @@ DISABLED_SERVICES =[ 'local.transcript_or_bacteria_contig_analysis',
 # every body can acces to this service
 AUTHORIZED_SERVICES = {
         'http://mobyle.pasteur.fr/data/services/servers/local/programs/dssp.xml'       : [ '157.99.*.*' ] ,
-        #'http://mobyle.pasteur.fr/data/services/servers/local/programs/blast2mydb.xml' : [ '157.99.*.*' , '41.242.101.2'] , # 41.242.101.2 => IP madagascar
-        'http://mobyle.pasteur.fr/data/services/servers/local/programs/blast2pgb.xml'  : [ '157.99.*.*', '142.76.1.62'  ],
         'http://mobyle.pasteur.fr/data/services/servers/local/programs/detect_cnv.xml' : [ '157.99.60.*', '157.99.*.*' ],
-        'http://mobyle.pasteur.fr/data/services/servers/local/programs/hmmdebug.xml'   : [ '157.99.60.*' ],
-        'http://mobyle.pasteur.fr/data/services/servers/local/programs/sleep.xml'      : [ '157.99.60.*' ],
         'http://mobyle.pasteur.fr/data/services/servers/local/programs/rnafold.xml'    : [ '157.99.60.*' ],
-        'http://mobyle.pasteur.fr/data/services/servers/local/programs/scangen.xml'    : [ '157.99.*.*'  ] ,
         'http://mobyle.pasteur.fr/data/services/servers/local/programs/netchop.xml'    : [ '157.99.*.*'  ] ,
-        'http://mobyle.pasteur.fr/data/services/servers/local/programs/netNglyc.xml'   : [ '157.99.*.*'  ] ,
-        'http://mobyle.pasteur.fr/data/services/servers/local/programs/netOglyc.xml'   : [ '157.99.*.*'  ] ,
         'http://mobyle.pasteur.fr/data/services/servers/local/programs/signalp.xml'    : [ '157.99.*.*'  ] ,
         'http://mobyle.pasteur.fr/data/services/servers/local/programs/tmhmm.xml'      : [ '157.99.*.*'  ] ,
         'http://mobyle.pasteur.fr/data/services/servers/local/programs/targetp.xml'    : [ '157.99.*.*'  ] ,
-        'http://mobyle.pasteur.fr/data/services/servers/local/programs/saxs_merge.xml'    : [ '157.99.*.*' ,#pasteur 
-                                                                                           '88.173.199.111' ,
-                                                                                           '134.79.32.*' ,  # SLAC 
-                                                                                           '134.79.34.*' ,  # SLAC 
-                                                                                           '169.230.90.*' , # UCSF Desktop
-                                                                                           '169.230.91.*' , # UCSF Desktop
-                                                                                           '169.230.79.*' , # UCSF Server
-                                                                                           '169.230.26.*' , # UCSF Server
-                                                                                           '169.230.228.*',  # UCSF Laptop
-                                                                                           '169.230.217.191',
                                                                                           ],
  }
 

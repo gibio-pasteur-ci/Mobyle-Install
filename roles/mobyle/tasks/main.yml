@@ -97,7 +97,7 @@
     owner={{ mobyle_user }}
     group={{ mobyle_group }}
     mode=0644
-  
+
 - name: Copy script to rotate logs monthly
   copy:
     src=month-log
