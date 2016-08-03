@@ -18,7 +18,7 @@ RewriteCond     %{REQUEST_URI}  /\. [OR]
 RewriteCond     %{REQUEST_URI}  /ADMINDIR
 RewriteRule     .*              - [F,L]
 
-RewriteCond     %{SERVER_NAME}	{{ server_name }}
+RewriteCond     %{SERVER_NAME}	{{ mobyle_server_name }}
 RewriteCond     %{REQUEST_URI}  ^/$
 RewriteRule	.*		/cgi-bin/portal.py [R,L]
 
