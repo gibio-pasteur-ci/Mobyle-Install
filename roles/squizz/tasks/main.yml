@@ -15,7 +15,7 @@
 - name: Squizz configure
   become: yes
   become_user: "{{ mobyle_user }}"
-  command: ./configure --prefix={{mobyle_home.stdout}} chdir=~/src/squizz-0.99c creates=Makefile
+  command: ./configure --prefix={{ mobyle_home }} chdir=~/src/squizz-0.99c creates=Makefile
 
 - name: Squizz make
   become: yes
