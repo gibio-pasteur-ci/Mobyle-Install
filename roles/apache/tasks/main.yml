@@ -3,6 +3,12 @@
   yum: name=httpd state=installed
   notify: start httpd
 
+- name: Ensure that apache work with NameVirtualhost
+  lineinfile:
+    dest=/etc/httpd/conf/httpd.conf
+    regexp='^#?NameVirtualHost'
+    line='NameVirtualHost *:80'
+    state=present
 
 - name: Ensure apache is running (and enable it at boot)
   service: name=httpd state=started enabled=yes
