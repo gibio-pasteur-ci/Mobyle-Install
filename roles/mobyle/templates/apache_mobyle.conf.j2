@@ -1,6 +1,6 @@
 # {{ ansible_managed }}
-<VirtualHost {{ mobyle_servername }}>
-	ServerName {{ mobyle_servername }}
+<VirtualHost {{ mobyle_server_name }}>
+	ServerName {{ mobyle_server_name }}
 	SetEnv http_proxy
 	DocumentRoot {{ mobyle_home }}/web/htdocs
 	ScriptAlias /cgi-bin/ {{ mobyle_home }}/web/cgi-bin/
