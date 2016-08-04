@@ -22,4 +22,4 @@
     - {role: squizz, tags: ['squizz']}
     - {role: apache, tags: ['apache']}
     - {role: mobyle, tags: ['mobyle']}
-    - {role: mobyle, tags: ['deploy_services']}
+    - {role: deploy_services, tags: ['deploy_services']}
