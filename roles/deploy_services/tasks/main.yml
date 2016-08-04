@@ -23,6 +23,7 @@
     src={{ mobyle_home }}/Mobyle/Services/Programs-5.1.2
     dest={{ mobyle_home }}/Mobyle/Services/Programs
     state=link
+    force=yes
 
 - name: check presence of Mobyle Workflows interfaces
   become: yes
@@ -48,6 +49,7 @@
     src={{ mobyle_home }}/Mobyle/Services/Workflows-1.1.2
     dest={{ mobyle_home }}/Mobyle/Services/Workflows
     state=link
+    force=yes
 
 - name: check presence of Mobyle Tutorials interfaces
   become: yes
@@ -73,10 +75,11 @@
     src={{ mobyle_home }}/Mobyle/Services/Tutorials-1.5.0
     dest={{ mobyle_home }}/Mobyle/Services/Tutorials
     state=link
+    force=yes
 
 - name: deploying services
   become: yes
   become_user: "{{ mobyle_user }}"
-  shell: mobdeploy deploy
+  shell: "{{ mobyle_home }}/Mobyle/Tools/mobdeploy deploy"
 
   
