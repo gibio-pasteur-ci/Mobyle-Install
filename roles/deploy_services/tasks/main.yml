@@ -73,3 +73,10 @@
     src={{ mobyle_home }}/Mobyle/Services/Tutorials-1.5.0
     dest={{ mobyle_home }}/Mobyle/Services/Tutorials
     state=link
+
+- name: deploying services
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  shell: mobdeploy deploy
+
+  
