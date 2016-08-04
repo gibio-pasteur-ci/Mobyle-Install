@@ -9,7 +9,7 @@
   user:
     name={{ mobyle_user }}
     group={{ mobyle_group }}
-    comment="Mobyke application user"
+    comment="Mobyle application user"
     home={{ mobyle_home }}
     shell=/bin/bash
     state=present
