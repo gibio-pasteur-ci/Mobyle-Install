@@ -64,6 +64,47 @@
               insertafter=EOF
               line="export PATH=$HOME/Mobyle/Tools:$HOME/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
 
+- name: Give write permission to apache on htdocs/data
+  file: 
+   path={{ mobyle_home }}/web/htdocs/data/
+   owner={{ mobyle_user }}
+   group={{ mobyle_group }}
+   mode=g+w
+   state=directory
+   recurse=yes
+
+- name: Create Mobyle log directory
+  file:
+    path={{ mobyle_home }}/log/mobyle
+    state=directory
+    owner={{ mobyle_user }}
+    group={{ mobyle_group }}
+    mode=775
+    recurse=yes
+
+- name: Create apache log directory
+  file:
+    path={{ mobyle_home }}/log/apache
+    state=directory
+    owner={{ mobyle_user }}
+    group={{ mobyle_group }}
+    mode=775
+
+- name: Allow others to go inside /var/log/httpd
+  file:
+    path=/var/log/httpd/
+    mode="o+x"
+    state=touch
+
+- name: Create links to apache logs
+  file:
+    src={{ item }}
+    dest={{ mobyle_home }}/log/apache/{{ item | basename }}
+    state=link
+    force=yes
+  with_fileglob:
+    - "/var/log/httpd/mobyle*"
+
 - name: add aliases
   become: yes
   become_user: "{{ mobyle_user }}"
