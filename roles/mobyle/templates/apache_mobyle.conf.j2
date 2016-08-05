@@ -2,6 +2,7 @@
 <VirtualHost *:80>
 	ServerName {{ mobyle_server_name }}
 	SetEnv http_proxy
+	SetEnv PYTHON_EGG_CACHE {{ mobyle_home }}/web/htdocs/data/
 	DocumentRoot {{ mobyle_home }}/web/htdocs
 	ScriptAlias /cgi-bin/ {{ mobyle_home }}/web/cgi-bin/
 	ScriptAlias /cgi-mobyle/ {{ mobyle_home }}/web/cgi-bin/
