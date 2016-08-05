@@ -124,8 +124,8 @@
   template:
     src=templates/htaccess.j2
     dest=~/web/htdocs/.htaccess
-    owner=mobyle
-    group=mobyle
+    owner={{ mobyle_user }}
+    group={{ mobyle_group }}
     mode=0644
 
 - name: Configure Mobyle
