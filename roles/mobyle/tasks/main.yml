@@ -146,6 +146,28 @@
     group=apache
     mode=0644
 
+- name: Copy announcement files
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  copy:
+    src="{{ item }"
+    dest={{ mobyle_home }}/web/portal/html/{{ item | basename }}
+    owner={{ mobyle_user }}
+    group={{ mobyle_group }}
+    mode=0644
+  with_fileglob:
+    - files/web/htdocs/portal/html/announcement.txt.*
+
+- name: Create link to empty annoucement file
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  file:
+    src={{ mobyle_home }}/web/htdocs/portal/html/announcement.txt.empty
+    dest={{ mobyle_home }}/web/htdocs/portal/html/announcement.txt
+    state=link
+    force=yes
+
+
 - name: Copy script to rotate logs monthly
   copy:
     src=month-log
