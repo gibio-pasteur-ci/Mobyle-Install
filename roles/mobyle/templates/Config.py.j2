@@ -423,13 +423,12 @@ DISABLED_SERVICES =[]
 # if there is no entry for a service it's mean that
 # every body can acces to this service
 AUTHORIZED_SERVICES = {
-        'http://mobyle.pasteur.fr/data/services/servers/local/programs/dssp.xml'       : [ '157.99.*.*' ] ,
-        'http://mobyle.pasteur.fr/data/services/servers/local/programs/detect_cnv.xml' : [ '157.99.60.*', '157.99.*.*' ],
-        'http://mobyle.pasteur.fr/data/services/servers/local/programs/rnafold.xml'    : [ '157.99.60.*' ],
-        'http://mobyle.pasteur.fr/data/services/servers/local/programs/netchop.xml'    : [ '157.99.*.*'  ] ,
-        'http://mobyle.pasteur.fr/data/services/servers/local/programs/signalp.xml'    : [ '157.99.*.*'  ] ,
-        'http://mobyle.pasteur.fr/data/services/servers/local/programs/tmhmm.xml'      : [ '157.99.*.*'  ] ,
-        'http://mobyle.pasteur.fr/data/services/servers/local/programs/targetp.xml'    : [ '157.99.*.*'  ] ,
+        #'http://mobyle.pasteur.fr/data/services/servers/local/programs/dssp.xml'       : [ '157.99.*.*' ] ,
+        #'http://mobyle.pasteur.fr/data/services/servers/local/programs/rnafold.xml'    : [ '157.99.60.*' ],
+        #'http://mobyle.pasteur.fr/data/services/servers/local/programs/netchop.xml'    : [ '157.99.*.*'  ] ,
+        #'http://mobyle.pasteur.fr/data/services/servers/local/programs/signalp.xml'    : [ '157.99.*.*'  ] ,
+        #'http://mobyle.pasteur.fr/data/services/servers/local/programs/tmhmm.xml'      : [ '157.99.*.*'  ] ,
+        #'http://mobyle.pasteur.fr/data/services/servers/local/programs/targetp.xml'    : [ '157.99.*.*'  ] ,
  }
 
 
@@ -459,7 +458,9 @@ LOCAL_DEPLOY_INCLUDE = { 'programs' : [ '*' ] ,
                           'viewers'  : [ '*' ] ,
                           }
 
-LOCAL_DEPLOY_EXCLUDE = { 'programs' : [ 'stride' , 'gff2ps', 'lvb' , 'wublast2'] ,
+LOCAL_DEPLOY_EXCLUDE = { 'programs' : [ 'stride' , 'gff2ps', 'lvb' , 'wublast2',
+                                        'dssp', 'rnafold', 'netchop', 'signalp', 'tmhmm', 'targetp'
+                                        ] ,
                           'workflows': ['transcript_or_bacteria_contig_analysis'] ,
                           'viewers'  : [ '' ] ,
                           }
