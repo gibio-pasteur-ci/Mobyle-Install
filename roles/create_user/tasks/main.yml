@@ -1,14 +1,9 @@
 ---
 
-- name: Creation of "mobyle" group
-  group:
-    name={{ mobyle_group }}
-    state=present
-
 - name: Creation of "mobyle" user
   user:
     name={{ mobyle_user }}
-    group={{ mobyle_group }}
+    group=apache
     comment="Mobyle application user"
     home={{ mobyle_home }}
     shell=/bin/bash
@@ -21,5 +16,5 @@
     path={{ mobyle_home }}/src/
     state=directory
     owner={{ mobyle_user }}
-    group={{ mobyle_group }}
+    group=apache
     mode=775

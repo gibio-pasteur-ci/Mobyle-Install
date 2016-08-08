@@ -1,7 +1,6 @@
 ---
 
 mobyle_user: mobyle
-mobyle_group: apache
 mobyle_home: /data/mobyle
 mobyle_server_name: mobyle-ci.web.pasteur.fr
 mobyle_admin: ['kamfourier@pasteur.ci', 'kamfourier@gmail.com']

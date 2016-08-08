@@ -5,6 +5,7 @@
 
   roles:
     - {role: system_dependancies, tags: ['system']}
+    - {role: apache, tags: ['apache']}
     - {role: create_user, tags: ['user']}
     - {role: python, tags: ['python']}
     - {role: setuptools, tags: ['setuptools']}
@@ -20,6 +21,5 @@
     - {role: pygraphviz, tags: ['pygraphviz']}
     - {role: golden, tags: ['golden']}
     - {role: squizz, tags: ['squizz']}
-    - {role: apache, tags: ['apache']}
     - {role: mobyle, tags: ['mobyle']}
     - {role: deploy_services, tags: ['deploy_services']}

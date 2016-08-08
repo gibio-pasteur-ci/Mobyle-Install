@@ -68,7 +68,7 @@
   file: 
    path={{ mobyle_home }}/web/htdocs/data/
    owner={{ mobyle_user }}
-   group={{ mobyle_group }}
+   group=apache
    mode=g+w
    state=directory
    recurse=yes
@@ -78,7 +78,7 @@
     path={{ mobyle_home }}/log/mobyle
     state=directory
     owner={{ mobyle_user }}
-    group={{ mobyle_group }}
+    group=apache
     mode=775
     recurse=yes
 
@@ -87,7 +87,7 @@
     path={{ mobyle_home }}/log/apache
     state=directory
     owner={{ mobyle_user }}
-    group={{ mobyle_group }}
+    group=apache
     mode=775
 
 - name: Allow others to go inside /var/log/httpd
@@ -125,7 +125,7 @@
     src=templates/htaccess.j2
     dest=~/web/htdocs/.htaccess
     owner={{ mobyle_user }}
-    group={{ mobyle_group }}
+    group=apache
     mode=0644
 
 - name: Configure Mobyle
@@ -135,7 +135,7 @@
     src=templates/Config.py.j2
     dest={{ mobyle_home }}/Mobyle/Local/Config/Config.py
     owner={{ mobyle_user }}
-    group={{ mobyle_group }}
+    group=apache
     mode=0644
 
 - name: Configure Mobyle vhost
@@ -143,7 +143,7 @@
     src=templates/apache_mobyle.conf.j2
     dest=/etc/httpd/conf.d/mobyle.conf
     owner={{ mobyle_user }}
-    group={{ mobyle_group }}
+    group=apache
     mode=0644
 
 - name: Copy script to rotate logs monthly
@@ -151,7 +151,7 @@
     src=month-log
     dest=~/src/bin/
     owner={{ mobyle_user }}
-    group={{ mobyle_group }}
+    group=apache
     mode=0750
 
 - name: Copy script to rotate logs weekly
@@ -159,7 +159,7 @@
     src=week-log
     dest=~/src/bin/
     owner={{ mobyle_user }}
-    group={{ mobyle_group }}
+    group=apache
     mode=0750
 
 - name: Set up cron
