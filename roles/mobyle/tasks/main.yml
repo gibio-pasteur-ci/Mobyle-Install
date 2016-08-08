@@ -153,7 +153,7 @@
     src="{{ item }"
     dest={{ mobyle_home }}/web/portal/html/{{ item | basename }}
     owner={{ mobyle_user }}
-    group={{ mobyle_group }}
+    group=apache
     mode=0644
   with_fileglob:
     - files/web/htdocs/portal/html/announcement.txt.*
@@ -167,6 +167,16 @@
     state=link
     force=yes
 
+- name: Copy local css file
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  copy:
+    src={{ mobyle_home }}/web/portal/css/local.css
+    dest={{ mobyle_home }}/web/portal/css/
+    owner={{ mobyle_user }}
+    group=apache
+    mode=0644
+  
 
 - name: Copy script to rotate logs monthly
   copy:

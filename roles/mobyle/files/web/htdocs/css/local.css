@@ -1,0 +1,77 @@
+/*
+You can use this CSS file to customize the look of your Mobyle portal.
+Please modify this file instead of the mobyle.css file, which can be modified
+in Mobyle newer versions.
+examples:
+#	Mobyle portal title using content that will be included
+	after the "Mobyle" heading  
+*/
+
+#mobyleHead:AFTER{
+		content: "@Pasteur-ci";
+	}
+	h1{
+		color: #4682B4;
+	}
+	h2,h3,h4,h5,fieldset,a {
+		color: #164274;
+	}
+
+.presentation {
+	border-color: #444488;
+	background-color: #E0ECFF;
+}
+
+/* welcome menu color*/
+.menu.welcome {
+    background-color: #AE67CB;    
+}
+/* active welcome menu color */
+.menu.welcome.selected, .menu.welcome:hover {
+    background-color: #CE87EB;
+}
+
+/* forms (programs, workflows,...) menu color */
+.menu.forms{
+    background-color: #4682B4;    
+}
+
+/* active forms (programs, workflows,...) menu color */
+.menu.forms.selected, .menu.forms:hover {
+    background-color: #86C2F4;    
+}
+/* data menu color */
+.menu.data{
+    background-color: #488748;    
+}
+
+/* active data menu color */
+.menu.data.selected, .menu.data:hover {
+    background-color: #88C788;    
+}
+
+/* jobs menu color */
+.menu.jobs{
+    background-color: #D0C56C;    
+}
+
+/* active jobs menu color */
+.menu.jobs.selected, .menu.jobs:hover {
+    background-color: #F0E58C;    
+}
+
+/* tutorials menu color */
+.menu.tutorials{
+    background-color: #B70303;    
+}
+
+/* active tutorials menu color */
+.menu.tutorials.selected, .menu.tutorials:hover {
+    background-color: #D72323;    
+}
+
+/* set viewer launch buttons to dark orange so that people notice them
+as a new feature */
+a.modalLink[data-viewername] button {
+    background-color: #FF8000;
+}
