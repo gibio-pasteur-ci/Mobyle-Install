@@ -482,22 +482,11 @@ LOCAL_DEPLOY_EXCLUDE = { 'programs' : [ 'stride' , 'gff2ps', 'lvb' , 'wublast2']
 #            }
 #        }
 
-## DESACTIVE le temps que ces server passe en 1.0 ##
 
-PORTAL_NAME = 'pasteur'
+PORTAL_NAME = 'pasteur-ci'
 
-PORTALS ={
-        'genouest': {
-                   'url': 'http://mobyle.genouest.org/cgi-bin/Mobyle/',
-                   'help' : 'olivier.sallou@irisa.fr',
-                   'repository': 'http://mobyle.genouest.org/Mobyle/',
-                   'services': { 'programs' :[ 'blast2' ]}
-        },
-}
+PORTALS ={}
 
-EXPORTED_SERVICES = ['clustalw-multialign','protein_distance_phylogeny',
-		             'pars', 'protpars', 'mix', 'fastdnaml', 'phyml', 'puzzle', 'bambe', 'clique', 'drawgram' , 'drawtree',
-                     'rbvotree' , 'getorf', 'blast2taxonomy', 'pdb2',  'pdb21','pdb22', 'pdb23'
-]
+EXPORTED_SERVICES = []
 
 
