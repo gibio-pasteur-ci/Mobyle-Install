@@ -38,7 +38,7 @@
   become: yes
   become_user: "{{ mobyle_user }}"
   file:
-    src=share/golden
-    dest={{ bank_root }}/indexes/golden
+    src={{ bank_root }}/index/golden
+    dest=share/golden
     state=link
     force=yes
