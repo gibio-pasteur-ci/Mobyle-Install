@@ -176,23 +176,16 @@
     owner={{ mobyle_user }}
     group=apache
     mode=0644
-  
 
-- name: Copy script to rotate logs monthly
+- name: Copy script to rotate logs
   copy:
-    src=month-log
+    src={{ item }}
     dest=~/src/bin/
     owner={{ mobyle_user }}
     group=apache
     mode=0750
-
-- name: Copy script to rotate logs weekly
-  copy:
-    src=week-log
-    dest=~/src/bin/
-    owner={{ mobyle_user }}
-    group=apache
-    mode=0750
+  with_fileglob:
+    - files/bin/*-log
 
 - name: Set up cron
   template:
