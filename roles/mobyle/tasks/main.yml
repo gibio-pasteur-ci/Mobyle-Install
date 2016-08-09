@@ -172,7 +172,7 @@
   become: yes
   become_user: "{{ mobyle_user }}"
   copy:
-    src="{{ item }"
+    src={{ item }}
     dest={{ mobyle_home }}/web/portal/html/{{ item | basename }}
     owner={{ mobyle_user }}
     group=apache
