@@ -60,13 +60,11 @@ MODULE_LOAD = { 'blast2mydb': "module load %(PACK_NAME)s/%(PACK_VERS)s html4blas
                 'bigorf_extract' : "module load scousin-tools/0.1",
                 'forest2consense' : "module load scousin-tools/0.1 newick-utils",
                 'fetchSequences': "module load EMBOSS",
-                'saxs_merge' : "module load IMP",
                 'nw_cat': None,
                 'signalp': "module load %(PROG_NAME)s/%(PROG_VERS)s",
                 'tmhmm': "module load %(PROG_NAME)s/%(PROG_VERS)s",
                 'netChop' : "module load %(PROG_NAME)s/%(PROG_VERS)s",
                 'cas_finder' : "module load macsyfinder/%(PACK_VERS)s",
-                'txsscan' : "module load macsyfinder/%(PACK_VERS)s",
                 'integron_finder' : "module load Integron_Finder/%(PACK_VERS)s",
                 'DEFAULT': "module load %(PACK_NAME)s/%(PACK_VERS)s"
                  }
@@ -88,9 +86,9 @@ LOGDIR = '{{ mobyle_home }}/log/mobyle'
 #                                                  #
 ####################################################
 
-# the 2 sequences conveter supported by Mobyle are
+# the 2 sequences converter supported by Mobyle are
 # squizz and the java version of readseq
-# squizz is HIGHLY recommanded
+# squizz is HIGHLY recommended
 
 from Mobyle.Converter import *
 
@@ -128,7 +126,7 @@ DATA_CONVERTER={
 #to test a xml ( python syntax in code , precond ... )
 # 1    - the command line is build 
 #      - the build log is NOT fill
-#      - the job is NOT excuted
+#      - the job is NOT executed
 
 #to know what's wrong in the xml I wrote.
 # 2    - the command line is build
@@ -156,8 +154,6 @@ DEBUG = 0
 # each element must be a valid path
 # the element order is kept to build the final PATH ( the binary path is add before the canonical PATH )
 
-#BINARY_PATH = [ "/mount/gensoft/scripts", "/mount/gensoft/bin", "/sbin" ] #path pour gensoft
-#BINARY_PATH = [ "/local/gensoft2/scripts", "/sbin" ] #path pour gensoft2 bin est positione par scripts
 BINARY_PATH = [ "/sbin" ] #Mobyle utilise module il n'a plus besoin des scripts
 
 #the path to the golden binary 
@@ -251,7 +247,7 @@ DATABANKS_CONFIG = {
 # to have a more control on the mandatory email
 # it able to have the general option but
 # it could be set to another value for particular service
-# exemple :
+# example :
 # OPT_EMAIL could be set at False ( the email is mandatory )
 # but set a True for some very short services.
 
@@ -278,12 +274,12 @@ DATABANKS_CONFIG = {
 #            #
 ##############
 
-#WELCOME_CONFIG to configuer the welcome page of the portal
+#WELCOME_CONFIG to configure the welcome page of the portal
 #WELCOME_CONFIG is a dictionnary with 2 entries:
-#  -'format': with 2 avalaible values:
+#  -'format': with 2 available values:
 #                      - 'html' if the url point out an html page
 #                      - 'atom' if the url point out an file in atom format
-#    -'url' : point toward rthe document to include in the portal welcome page
+#    -'url' : point toward the document to include in the portal welcome page
                
 WELCOME_CONFIG= { 'format': 'html' ,
                   'url': '{{ root_url }}/portal/html/welcome_page.html'
@@ -329,7 +325,7 @@ MAX_JOB_PER_USER = 10
 #        #
 ##########
 
-#from: sender email adresse ( default = HELP )
+#from: sender email address ( default = HELP )
 SENDER = "{{ mobyle_email_sender }}"
 
 #set this True if you don't want results to be sent by email.
@@ -344,7 +340,7 @@ SENDER = "{{ mobyle_email_sender }}"
 
 EMAIL_DELAY = 60
 
-# if you want to resolv the domain name of the user email
+# if you want to resolve the domain name of the user email
 # and if it has a mail exchanger field
 # (to avoid fake user email address)
 # by default DNS_RESOLVER = False
@@ -392,7 +388,7 @@ DISABLE_ALL = False
 ## example:
 ##DISABLED_SERVICES = [ 'portal1.service1' , # disable the service1 from the imported portal1 (as defined in PORTALS )
 ##                      'portal2.*' ,        # disable all services from the imported portal2
-##                      'local.clustalw*'    # disable all services begining by clustalw (clutalw-multialign ,clustalw-sequence , clustalw-profile ) from this server.
+##                      'local.clustalw*'    # disable all services beginning by clustalw (clutalw-multialign ,clustalw-sequence , clustalw-profile ) from this server.
 ##                     ] 
 ## By default all services are enabled
 
@@ -461,8 +457,8 @@ LOCAL_DEPLOY_INCLUDE = { 'programs' : [ '*' ] ,
 LOCAL_DEPLOY_EXCLUDE = { 'programs' : [ 'stride' , 'gff2ps', 'lvb' , 'wublast2',
                                         'dssp', 'rnafold', 'netchop', 'signalp', 'tmhmm', 'targetp'
                                         ] ,
-                          'workflows': ['transcript_or_bacteria_contig_analysis'] ,
-                          'viewers'  : [ '' ] ,
+                          'workflows': [] ,
+                          'viewers'  : [] ,
                           }
 
 
