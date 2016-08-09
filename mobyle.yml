@@ -4,7 +4,7 @@
   remote_user: root
 
   roles:
-    - {role: system_dependancies, tags: ['system']}
+    - {role: system_dependencies, tags: ['system']}
     - {role: apache, tags: ['apache']}
     - {role: create_user, tags: ['user']}
     - {role: python, tags: ['python']}
