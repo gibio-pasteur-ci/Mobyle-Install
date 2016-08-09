@@ -34,3 +34,11 @@
   become_user: "{{ mobyle_user }}"
   command: make install chdir=~/src/golden-1.1a
 
+- name: create link to golden indexes
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  file:
+    src=share/golden
+    dest={{ bank_root }}/indexes/golden
+    state=link
+    force=yes
