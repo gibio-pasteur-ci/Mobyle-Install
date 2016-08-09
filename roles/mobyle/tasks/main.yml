@@ -203,7 +203,7 @@
   become_user: "{{ mobyle_user }}"
   copy:
     src={{ item }}
-    dest={{ mobyle_home }}/web/portal/html/{{ item | basename }}
+    dest={{ mobyle_home }}/web/htdocs/portal/html/{{ item | basename }}
     owner={{ mobyle_user }}
     group=apache
     mode=0644
@@ -223,8 +223,8 @@
   become: yes
   become_user: "{{ mobyle_user }}"
   copy:
-    src={{ mobyle_home }}/web/portal/css/local.css
-    dest={{ mobyle_home }}/web/portal/css/
+    src={{ mobyle_home }}/web/htdocs/portal/css/local.css
+    dest={{ mobyle_home }}/web/htdocs/portal/css/
     owner={{ mobyle_user }}
     group=apache
     mode=0644
