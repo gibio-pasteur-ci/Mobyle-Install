@@ -1,0 +1,293 @@
+<vlist>
+  <velem undef="1">
+    <value>null</value>
+    <label>Choose a database</label>
+  </velem>
+  <velem>
+    <value>alunuc</value>
+    <label>Select Alu repeats from REPBASE</label>
+  </velem>
+  <velem>
+    <value>embl</value>
+    <label>embl: Embl last release + updates</label>
+  </velem>
+  <velem>
+    <value>embl_update</value>
+    <label>embl_new: Embl updates</label>
+  </velem>
+  <velem>
+    <value>embl_release</value>
+    <label>embl_release: Embl last release</label>
+  </velem>
+  <velem>
+    <value>embl_wgs</value>
+    <label>EMBL : Whole Genome Shotgun</label>
+  </velem>
+   <velem>
+    <value>nt</value>
+    <label>Nucleotide sequence database, minimally non-redundant</label>
+  </velem> 
+  <!-- GENBANK -->
+  <velem>
+    <value>genbank</value>
+    <label>genbank: Genbank last release + updates</label>
+  </velem>
+  <velem>
+    <value>genbank_update</value>
+    <label>genbank_update: Genbank updates</label>
+  </velem>
+  <velem>
+    <value>genbank_release</value>
+    <label>genbank_release: Genbank last release</label>
+  </velem>
+  <velem>
+    <value>genbank_wgsnuc</value>
+    <label>Genbank : Whole Genome Shotgun</label>
+  </velem>
+  <velem>
+    <value>genbank_release_bct</value>
+    <label>genbank_release_bct: Genbank  Bacterial</label>
+  </velem>
+  <velem>
+    <value>genbank_release_con</value>
+    <label>genbank_release_con: Genbank Constructed Sequences</label>
+  </velem>
+  <velem>
+    <value>genbank_release_env</value>
+    <label>genbank_release_env: Genbank Environmental sampling</label>
+  </velem>
+  <velem>
+    <value>genbank_release_est</value>
+    <label>genbank_release_est: Genbank EST (Expressed Sequence Tags)</label>
+  </velem>
+  <velem>
+    <value>genbank_release_gss</value>
+    <label>genbank_release_gss: Genbank genome survey sequence</label>
+  </velem>
+  <velem>
+    <value>genbank_release_htc</value>
+    <label>genbank_release_htc: Genbank HTC (high throughput cDNA sequencing)</label>
+  </velem>
+  <velem>
+    <value>genbank_release_htg</value>
+    <label>genbank_release_htg: Genbank  HTG (high throughput genomic sequencing)</label>
+  </velem>
+  <velem>
+    <value>genbank_release_inv</value>
+    <label>genbank_release_inv: Genbank Invertebrate</label>
+  </velem>
+  <velem>
+    <value>genbank_release_mam</value>
+    <label>genbank_release_mam: Genbank Other mammalian</label>
+  </velem>
+  <velem>
+    <value>genbank_release_phg</value>
+    <label>genbank_release_phg: Genbank Phage</label>
+  </velem>
+  <velem>
+    <value>genbank_release_pln</value>
+    <label>genbank_release_pln: Genbank Plant (including fungi and algae)</label>
+  </velem>
+  <velem>
+    <value>genbank_release_pri</value>
+    <label>genbank_release_pri: Genbank Primate</label>
+  </velem>
+  <velem>
+    <value>genbank_release_rod</value>
+    <label>genbank_release_rod: Genbank Rodent</label>
+  </velem>
+  <velem>
+    <value>genbank_release_sts</value>
+    <label>genbank_release_sts: Genbank STS (sequence tagged site)</label>
+  </velem>
+  <velem>
+    <value>genbank_release_syn</value>
+    <label>genbank_release_syn: Genbank Synthetic and chimeric</label>
+  </velem>
+  <velem>
+    <value>genbank_release_tsa</value>
+    <label>genbank_release_tsa: Genbank Transcriptome shotgun assembly</label>
+  </velem>
+  <velem>
+    <value>genbank_release_una</value>
+    <label>genbank_release_una: Genbank Unannotated</label>
+  </velem>
+  <velem>
+    <value>genbank_release_vrl</value>
+    <label>genbank_release_vrl: Genbank Viral</label>
+  </velem>
+  <velem>
+    <value>genbank_release_vrt</value>
+    <label>genbank_release_vrt: Genbank Other vertebrate</label>
+  </velem>
+  <!-- Patent  -->
+    <velem>
+    <value>genbank_release_pat</value>
+    <label>genbank_release_pat: Genbank Patent</label>
+  </velem>
+  <velem>
+    <value>epo</value>
+    <label>European Patent Office</label>
+  </velem>
+  <velem>
+    <value>vector</value>
+    <label>Vector subset of GenBank(R), NCBI</label>
+  </velem> 
+  <!-- RDP II -->
+  <velem>
+    <value>rdpii</value>
+    <label>Ribosomal Database Project II database</label>
+  </velem>
+  <velem>
+    <value>rdpii_cultured</value>
+    <label>RPDII without uncultured bacteria</label>
+  </velem>
+  <!-- RefSeq -->
+  <velem>
+    <value>refseqn_release</value>
+    <label>NCBI Reference Sequence (RefSeq) Database last release</label>
+  </velem>
+  <velem>
+    <value>refseqn_udpate</value>
+    <label>NCBI Reference Sequence (RefSeq) updates</label>
+  </velem>
+  <velem>
+    <value>refseqn</value>
+    <label>RefSeq (last release + updates)</label>
+  </velem>
+<velem>
+    <value>imgt</value>
+    <label>imgt: IMGT/LIGM-DB, ImMunoGeneTics sequence database</label>
+  </velem> 
+
+  <!-- Complete genome -->
+  <velem>
+    <value>borrelia</value>
+    <label>Borrelia burgdorferi B31, complete genome</label>
+  </velem>
+  <velem>
+    <value>bsubtilis</value>
+    <label>Bacillus subtilis subsp. subtilis str. 168, complete genome</label>
+  </velem>
+  <velem>
+    <value>calbicans5314</value>
+    <label>Candida albicans strain 5314</label>
+  </velem>
+   <velem>
+    <value>calbicansWO1</value>
+    <label>Candida albicans strain WO1</label>
+  </velem>  
+  <velem>
+    <value>cneoformansJEC21</value>
+    <label>Cryptococcus neoformans strain JEC21</label>
+  </velem>
+  <velem>
+    <value>cneoformansH99</value>
+    <label>Cryptococcus neoformans strain H99</label>
+  </velem>
+  <velem>
+    <value>ecoli</value>
+    <label>Escherichia Coli complete genome</label>
+  </velem>
+  <velem>
+    <value>hpylori</value>
+    <label>hpylori: Helicobacter Pylori complete genome</label>
+  </velem> 
+  <velem>
+    <value>mtuberculosis</value>
+    <label>muberculosis: Mycobacterium tuberculosis complete genome</label>
+  </velem>
+    <velem>
+    <value>ypestis</value>
+    <label>ypestis: Yersinia pestis unfinished genome</label>
+  </velem> 
+  <velem>
+    <value>genitalium</value>
+    <label>genitalium: Mycoplasma Genitalium complete genome</label>
+  </velem>  
+  <velem>
+    <value>pneumoniae</value>
+    <label>pneumoniae: Mycoplasma Pneumoniae complete genome</label>
+  </velem>
+  <velem>
+    <value>pfalciparum</value>
+    <label>pfalciparum: Plasmodium falciparum 3D7</label>
+  </velem>  
+  <velem>
+    <value>pvivax</value>
+    <label>pvivax: Plasmodium vivax strin Sal-I</label>
+  </velem> 
+  <velem>
+    <value>spombe</value>
+    <label>Schizosaccharomyces pombe</label>
+  </velem>  
+  <velem>
+    <value>scerevisiae</value>
+    <label>Saccharomyces cerevisiae S288C strain genome</label>
+  </velem> 
+  <velem>
+    <value>dmelanogaster</value>
+    <label>Drosophila melanogaster (fly)</label>
+  </velem>
+   <velem>
+    <value>vipr_nt</value>
+    <label>Virus Pathogen Resource</label>
+  </velem>      
+  <!-- Mamals -->
+  <velem>
+    <value>btaurus</value>
+    <label>Bos taurus (Cow) full genome</label>
+  </velem>
+  <velem>
+    <value>cfamiliaris</value>
+    <label>Canis familiaris</label>
+  </velem>  
+  <velem>
+    <value>chiroptera</value>
+    <label>bat</label>
+  </velem>  
+    <velem>
+    <value>mlucifugus</value>
+    <label>Myotis lucifugus (Little brown bat)</label>
+  </velem>
+  <velem>
+    <value>pvampyrus</value>
+    <label>pvampyrus: Pteropus vampyrus Large flying fox (bat)</label>
+  </velem>   
+  <velem>
+    <value>csabaeus</value>
+    <label>Chlorocebus sabaeus (green monkey)</label>
+  </velem>  
+  <velem>
+    <value>ecaballus</value>
+    <label>Equus caballus (horse)</label>
+  </velem>  
+  <velem>
+    <value>fcatus</value>
+    <label>Felis catus (cat)</label>
+  </velem>  
+  <velem>
+    <value>hg19</value>
+    <label>Homo sapiens Human v19</label>
+  </velem>  
+  <velem>
+    <value>mm9</value>
+    <label>Mus musculus (Mouse v9)</label>
+  </velem>      
+  <velem>
+    <value>mm10</value>
+    <label>Mus musculus (Mouse v10)</label>
+  </velem>      
+  <velem>
+    <value>sscrofa</value>
+    <label>Sus scrofa pig</label>
+  </velem> 
+  <velem>
+    <value>greengenes</value>
+    <label>16S RNA genes database</label>
+  </velem>  
+   <velem>
+    <value>silva</value>
+    <label>RNA Database Project</label>
+  </velem>   
+</vlist>

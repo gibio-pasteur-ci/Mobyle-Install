@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- XML Authors: Herve Menager -->
+<!-- 'Biological Software and Databases' Group, Institut Pasteur, Paris. -->
+<!-- Distributed under LGPLv2 Licence. Please refer to the COPYING.LIB document. -->
+<tutorial>
+   <head>
+      <name>BMPS_tutorial</name>
+      <doc>
+         <title>BMPS Tutorial (Beta)</title>
+         <description>
+            <text lang="en">How to use BMPS (Beta), the Mobyle workflow interface</text>
+         </description>
+         <authors>H. Menager</authors>
+      </doc>
+      <interface type="tutorial">
+         <div xmlns="http://www.w3.org/1999/xhtml">
+        <iframe src="https://docs.google.com/presentation/embed?id=10fYJ4ASSHsq0fKzAZWZfvfNkKSyUs4WRfl6vzWONyng" frameborder="0" width="960" height="749" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe> 
+         </div>
+      </interface>
+   </head>
+</tutorial>

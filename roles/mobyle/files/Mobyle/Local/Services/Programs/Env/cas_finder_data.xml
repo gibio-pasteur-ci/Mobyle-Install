@@ -1,0 +1,11 @@
+<data>
+    <profiles>/local/gensoft2/exe/macsyfinder/1.0.2/share/macsyfinder/systems/CRISPR-Cas/profiles</profiles>
+    <models>
+        <general>/local/gensoft2/exe/macsyfinder/1.0.2/share/macsyfinder/systems/CRISPR-Cas/models/general</general>
+        <typing>/local/gensoft2/exe/macsyfinder/1.0.2/share/macsyfinder/systems/CRISPR-Cas/models/typing</typing>
+        <subtyping>/local/gensoft2/exe/macsyfinder/1.0.2/share/macsyfinder/systems/CRISPR-Cas/models/sub-typing</subtyping>
+    </models>
+    <worker>
+        <code proglang="python">" --worker $NSLOTS "</code>
+    </worker>
+</data>

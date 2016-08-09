@@ -1,0 +1,1187 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- XML Authors: Corinne Maufrais, Nicolas Joly and Bertrand Neron,             -->
+<!-- 'Biological Software and Databases' Group, Institut Pasteur, Paris.         -->
+<!-- Distributed under LGPLv2 License. Please refer to the COPYING.LIB document. -->
+<program>
+  <head>
+    <name>blast2mydb</name>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="Entities/blast_package.xml"/>
+    <doc>
+      <title>BLAST2MYDB</title>
+      <description>
+        <text lang="en">NCBI BLAST, with gaps against my sequences database</text>
+      </description>
+      <reference>Altschul, Stephen F., Thomas L. Madden, Alejandro A. Schaeffer,Jinghui Zhang, Zheng Zhang, Webb Miller, and David J. Lipman (1997), Gapped BLAST and PSI-BLAST: a new generation of protein database search programs, Nucleic Acids Res. 25:3389-3402.</reference>
+      <doclink>http://www.ncbi.nlm.nih.gov/books/bv.fcgi?rid=handbook.chapter.ch16</doclink>
+      <doclink>http://www.ncbi.nlm.nih.gov/Education/BLASTinfo/tut1.html</doclink>
+    </doc>
+    <category>database:search:homology</category>
+  </head>
+  <parameters>
+    <paragraph>
+      <name>db</name>
+      <prompt lang="en">Create my Database</prompt>
+      <parameters>
+        <parameter ishidden="1">
+          <name>formatdb</name>
+          <type>
+            <datatype>
+              <class>String</class>
+            </datatype>
+          </type>
+          <format>
+            <code proglang="perl">"formatdb "</code>
+            <code proglang="python">"formatdb "</code>
+          </format>
+          <argpos>1</argpos>
+        </parameter>
+        <parameter ismandatory="1" issimple="1">
+          <name>protein_db</name>
+          <prompt lang="en">Protein db</prompt>
+          <type>
+            <datatype>
+              <class>Sequence</class>
+            </datatype>
+            <dataFormat>FASTA</dataFormat>
+            <card>2,n</card>
+          </type>
+          <precond>
+            <code proglang="perl">$blast2 =~ /^blast[px]$/</code>
+            <code proglang="python">blast2 in [ "blastx" , "blastp" ]</code>
+          </precond>
+          <format>
+            <code proglang="perl">" -i $value"</code>
+            <code proglang="python">" -i "+ str(value)</code>
+          </format>
+          <argpos>2</argpos>
+          <comment>
+            <text lang="en">Create a protein database for blastx</text>
+          </comment>
+        </parameter>
+        <parameter ismandatory="1" issimple="1">
+          <name>nucleotid_db</name>
+          <prompt lang="en">Nucleotid db</prompt>
+          <type>
+            <datatype>
+              <class>Sequence</class>
+            </datatype>
+            <dataFormat>FASTA</dataFormat>
+            <card>2,n</card>
+          </type>
+          <precond>
+            <code proglang="perl">$blast2 =~ /^(blastn|tblast[nx]|psitblastn)$/</code>
+            <code proglang="python">blast2 in [ "blastn" , "tblastx", "tblastn" , "psitblastn" ]</code>
+          </precond>
+          <format>
+            <code proglang="perl">"-p F -i $value"</code>
+            <code proglang="python">"-p F -i "+ str(value)</code>
+          </format>
+          <argpos>2</argpos>
+          <comment>
+            <text lang="en">Create a nucleotid database for blastn, tblastn or tblastx</text>
+          </comment>
+        </parameter>
+        <parameter ismandatory="1" issimple="1">
+          <name>db_name</name>
+          <prompt lang="en">the name of my db</prompt>
+          <type>
+            <datatype>
+              <class>String</class>
+            </datatype>
+          </type>
+          <vdef>
+            <value>myDatabase</value>
+          </vdef>
+          <format>
+            <code proglang="python">" -n " + str( value )</code>
+          </format>
+          <argpos>3</argpos>
+        </parameter>
+      </parameters>
+    </paragraph>
+    <parameter ishidden="1" iscommand="1">
+      <name>blast_init</name>
+      <prompt lang="en">Blast initiation</prompt>
+      <type>
+        <datatype>
+          <class>String</class>
+        </datatype>
+      </type>
+      <format>
+        <code proglang="perl">" &amp;&amp; blastall "</code>
+        <code proglang="python">" &amp;&amp; blastall "</code>
+      </format>
+      <argpos>4</argpos>
+    </parameter>
+    <parameter ismandatory="1" issimple="1">
+      <name>blast2</name>
+      <prompt lang="en">Blast program (-p)</prompt>
+      <type>
+        <datatype>
+          <class>Choice</class>
+        </datatype>
+      </type>
+      <vdef>
+        <value>null</value>
+      </vdef>
+      <vlist>
+        <velem undef="1">
+          <value>null</value>
+          <label>Choose a program</label>
+        </velem>
+        <velem>
+          <value>blastn</value>
+          <label>Blastn (nucleotide query / nucleotide db)</label>
+        </velem>
+        <velem>
+          <value>blastx</value>
+          <label>Blastx (translated nucleotide query / protein db)</label>
+        </velem>
+        <velem>
+          <value>tblastx</value>
+          <label>tBlastx (translated nucleotide query / translated nucleotide db)</label>
+        </velem>
+        <velem>
+          <value>blastp</value>
+          <label>Blastp (protein query / protein db)</label>
+        </velem>
+        <velem>
+          <value>tblastn</value>
+          <label>tBlastn (protein query / translated nucleotide db)</label>
+        </velem>
+        <velem>
+          <value>psitblastn</value>
+          <label>psitBlastn (protein query / translated nucleotide db)</label>
+        </velem>
+      </vlist>
+      <format>
+        <code proglang="perl">" -p $value"</code>
+        <code proglang="python">" -p "+ str(value)</code>
+      </format>
+      <argpos>5</argpos>
+      <comment>
+        <text lang="en">- Blastp compares an amino acid query sequence against a protein sequence database;</text>
+        <text lang="en">- Blastn compares a nucleotide query sequence against a nucleotide sequence database;</text>
+        <text lang="en">- Blastx compares the six-frame conceptual translation products of a nucleotide query sequence (both strands) against a protein sequence database;</text>
+        <text lang="en">- tBlastn compares a protein query sequence against a nucleotide sequence database dynamically translated in all six reading frames (both strands).</text>
+        <text lang="en">- tBlastx compares the six-frame translations of a nucleotide query sequence against the six-frame translations of a nucleotide sequence database.</text>
+        <text lang="en">- psitBlastn compares a protein query sequence against a nucleotide sequence database dynamically translated in all six reading frames (both strands) using a position specific matrix created by PSI-BLAST.</text>
+      </comment>
+    </parameter>
+    <parameter ishidden="1">
+      <name>blastdb</name>
+      <type>
+        <datatype>
+          <class>String</class>
+        </datatype>
+      </type>
+      <format>
+        <code proglang="perl">" -d $db_name"</code>
+        <code proglang="python">" -d "+ str( db_name )</code>
+      </format>
+      <argpos>6</argpos>
+    </parameter>
+    <paragraph>
+      <name>query</name>
+      <prompt lang="en">Query Sequence</prompt>
+      <argpos>10</argpos>
+      <parameters>
+        <parameter ismandatory="1" issimple="1" ismaininput="1">
+          <name>query_seq</name>
+          <prompt lang="en">Query (-i)</prompt>
+          <type>
+            <datatype>
+              <class>Sequence</class>
+            </datatype>
+            <dataFormat>FASTA</dataFormat>
+            <card>1,n</card>
+          </type>
+          <format>
+            <code proglang="perl">" -i $query"</code>
+            <code proglang="python">" -i "+ str(query_seq)</code>
+          </format>
+          <comment>
+            <text lang="en">Read (first, query) sequence or set from file</text>
+          </comment>
+        </parameter>
+        <parameter>
+          <name>start_region</name>
+          <prompt lang="en">Start of required region in query sequence (-L)</prompt>
+          <type>
+            <datatype>
+              <class>Integer</class>
+            </datatype>
+          </type>
+          <comment>
+            <text lang="en">Location on query sequence</text>
+          </comment>
+        </parameter>
+        <parameter>
+          <name>end_region</name>
+          <prompt lang="en">End of required region in query sequence (-L)</prompt>
+          <type>
+            <datatype>
+              <class>Integer</class>
+            </datatype>
+          </type>
+          <precond>
+            <code proglang="perl">defined $start_region</code>
+            <code proglang="python">start_region is not None</code>
+          </precond>
+          <format>
+            <code proglang="perl">(defined $value) ? " -L \"$start_region $value\"" : " -L \"$start_region\""</code>
+            <code proglang="python">(' -L "%s"' % (str(start_region)), ' -L "%s %s"' % (str(start_region), str(value)))[value is not None]</code>
+          </format>
+          <comment>
+            <text lang="en">Location on query sequence</text>
+          </comment>
+        </parameter>
+        <parameter>
+          <name>concat</name>
+          <prompt lang="en">Number of concatenated queries (blastn or tblastn) (-B)</prompt>
+          <type>
+            <datatype>
+              <class>Integer</class>
+            </datatype>
+          </type>
+          <precond>
+            <code proglang="perl">$blast2 =~ /^t?blastn$/</code>
+            <code proglang="python">blast2 in [ "blastn" , "tblastn" ]</code>
+          </precond>
+          <format>
+            <code proglang="perl">(defined $value) ? " -B $value" : ""</code>
+            <code proglang="python">("" , " -B "+str(value))[value is not None]</code>
+          </format>
+        </parameter>
+      </parameters>
+    </paragraph>
+    <paragraph>
+      <name>scoring_opt</name>
+      <prompt lang="en">Scoring options</prompt>
+      <argpos>5</argpos>
+      <parameters>
+        <parameter>
+          <name>open_a_gap</name>
+          <prompt lang="en">Cost to open a gap (-G)</prompt>
+          <type>
+            <datatype>
+              <class>Float</class>
+            </datatype>
+          </type>
+          <format>
+            <code proglang="perl">(defined $value) ? " -G $value" : ""</code>
+            <code proglang="python">("" , " -G "+str(value))[value is not None]</code>
+          </format>
+          <comment>
+            <text lang="en">Default: 5 for blastn; 10 for blastp, blastx and tblastn</text>
+          </comment>
+        </parameter>
+        <parameter>
+          <name>extend_a_gap</name>
+          <prompt lang="en">Cost to extend a gap (-E)</prompt>
+          <type>
+            <datatype>
+              <class>Float</class>
+            </datatype>
+          </type>
+          <format>
+            <code proglang="perl">(defined $value) ? " -E $value" : ""</code>
+            <code proglang="python">("" , " -E "+str(value))[value is not None]</code>
+          </format>
+          <comment>
+            <text lang="en">Default: 2 for blastn; 1 for blastp, blastx and tblastn</text>
+            <text lang="en">Limited values for gap existence and extension are supported for these programs. Some supported and suggested values are:</text>
+            <text lang="en">Existence Extension</text>
+            <text lang="en">10 -- 1</text>
+            <text lang="en">10 -- 2</text>
+            <text lang="en">11 -- 1</text>
+            <text lang="en">8 -- 2</text>
+            <text lang="en">9 -- 2</text>
+          </comment>
+        </parameter>
+        <paragraph>
+          <name>scoring_blast</name>
+          <prompt lang="en">Protein penalty (not for blastn)</prompt>
+          <precond>
+            <code proglang="perl">$blast2 ne "blastn"</code>
+            <code proglang="python">blast2 != "blastn"</code>
+          </precond>
+          <parameters>
+            <parameter>
+              <name>matrix</name>
+              <prompt lang="en">Similarity matrix (-M)</prompt>
+              <type>
+                <datatype>
+                  <class>Choice</class>
+                </datatype>
+              </type>
+              <vdef>
+                <value>BLOSUM62</value>
+              </vdef>
+              <vlist>
+                <velem>
+                  <value>BLOSUM62</value>
+                  <label>BLOSUM62</label>
+                </velem>
+                <velem>
+                  <value>BLOSUM45</value>
+                  <label>BLOSUM45</label>
+                </velem>
+                <velem>
+                  <value>BLOSUM80</value>
+                  <label>BLOSUM80</label>
+                </velem>
+                <velem>
+                  <value>PAM30</value>
+                  <label>PAM30</label>
+                </velem>
+                <velem>
+                  <value>PAM70</value>
+                  <label>PAM70</label>
+                </velem>
+              </vlist>
+              <format>
+                <code proglang="perl">(defined $value and $value ne $vdef) ? " -M $value" : ""</code>
+                <code proglang="python">("" , " -M "+str(value))[value is not None and value != vdef]</code>
+              </format>
+            </parameter>
+          </parameters>
+        </paragraph>
+        <paragraph>
+          <name>scoring_blastn</name>
+          <prompt lang="en">Blastn penalty</prompt>
+          <precond>
+            <code proglang="perl">$blast2 eq "blastn"</code>
+            <code proglang="python">blast2 == "blastn"</code>
+          </precond>
+          <parameters>
+            <parameter>
+              <name>mismatch</name>
+              <prompt lang="en">Penalty for a nucleotide mismatch (-q)</prompt>
+              <type>
+                <datatype>
+                  <class>Float</class>
+                </datatype>
+              </type>
+              <vdef>
+                <value>-3</value>
+              </vdef>
+              <format>
+                <code proglang="perl">(defined $value and $value != $vdef) ? " -q $value" : ""</code>
+                <code proglang="python">("" , " -q "+str(value))[value is not None and value != vdef]</code>
+              </format>
+            </parameter>
+            <parameter>
+              <name>match</name>
+              <prompt lang="en">Reward for a nucleotide match (-r)</prompt>
+              <type>
+                <datatype>
+                  <class>Float</class>
+                </datatype>
+              </type>
+              <vdef>
+                <value>1</value>
+              </vdef>
+              <format>
+                <code proglang="perl">(defined $value and $value != $vdef) ? " -r $value" : ""</code>
+                <code proglang="python">("" , " -r "+str(value))[value is not None and value != vdef]</code>
+              </format>
+            </parameter>
+          </parameters>
+        </paragraph>
+        <parameter>
+          <name>frameshift</name>
+          <prompt lang="en">Frame shift penalty (-w)</prompt>
+          <type>
+            <datatype>
+              <class>Float</class>
+            </datatype>
+          </type>
+          <format>
+            <code proglang="perl">(defined $value) ? " -w $value" : ""</code>
+            <code proglang="python">("", " -w "+str(value))[value is not None]</code>
+          </format>
+        </parameter>
+      </parameters>
+    </paragraph>
+    <paragraph>
+      <name>filter_opt</name>
+      <prompt lang="en">Filtering and masking options</prompt>
+      <argpos>20</argpos>
+      <comment>
+        <text lang="en">BLAST 2.0 uses the dust low-complexity filter for blastn and seg for the other programs.</text>
+        <text lang="en">If one uses '-F T' then normal filtering by seg or dust (for blastn) occurs (likewise '-F F' means no filtering whatsoever).</text>
+      </comment>
+      <parameters>
+        <parameter>
+          <name>filter</name>
+          <prompt lang="en">Filter or Masking query sequence (DUST with blastn, SEG with others) (-F)</prompt>
+          <type>
+            <datatype>
+              <class>Boolean</class>
+            </datatype>
+          </type>
+          <vdef>
+            <value>1</value>
+          </vdef>
+          <format>
+            <code proglang="perl">($value) ? "" : " -F F"</code>
+            <code proglang="python">(" -F F" , "")[ value ]</code>
+          </format>
+        </parameter>
+        <parameter>
+          <name>other_filters</name>
+          <prompt lang="en">Filtering options (Filter must be true)</prompt>
+          <type>
+            <datatype>
+              <class>Choice</class>
+            </datatype>
+          </type>
+          <precond>
+            <code proglang="perl">$filter and not $other_masking</code>
+            <code proglang="python">filter and not other_masking</code>
+          </precond>
+          <vdef>
+            <value>null</value>
+          </vdef>
+          <flist>
+            <felem undef="1">
+              <value>null</value>
+              <label>Default</label>
+              <code proglang="perl">""</code>
+              <code proglang="python">""</code>
+            </felem>
+            <felem>
+              <value>v1</value>
+              <label>Coiled-coiled filter (C)</label>
+              <code proglang="perl">" -F C"</code>
+              <code proglang="python">" -F C"</code>
+            </felem>
+            <felem>
+              <value>v2</value>
+              <label>Both SEG and coiled-coiled filters ("C;S")</label>
+              <code proglang="perl">" -F \"C;S\""</code>
+              <code proglang="python">" -F \"C;S\""</code>
+            </felem>
+            <felem>
+              <value>v3</value>
+              <label>DUST filter for DNA (D)</label>
+              <code proglang="perl">" -F D"</code>
+              <code proglang="python">" -F D"</code>
+            </felem>
+          </flist>
+          <comment>
+            <text lang="en">A coiled-coiled filter, based on the work of Lupas et al. (Science, vol 252, pp. 1162-4 (1991)) written by John Kuzio (Wilson et al., J Gen Virol, vol. 76, pp. 2923-32 (1995))</text>
+          </comment>
+        </parameter>
+        <parameter>
+          <name>other_masking</name>
+          <prompt lang="en">Masking options (Filter must be true)</prompt>
+          <type>
+            <datatype>
+              <class>Choice</class>
+            </datatype>
+          </type>
+          <precond>
+            <code proglang="perl">$filter and not $other_filters</code>
+            <code proglang="python">filter and not other_filters</code>
+          </precond>
+          <vdef>
+            <value>null</value>
+          </vdef>
+          <flist>
+            <felem undef="1">
+              <value>null</value>
+              <label/>
+              <code proglang="perl">""</code>
+              <code proglang="python">""</code>
+            </felem>
+            <felem>
+              <value>v1</value>
+              <label>Masking with SEG should only be done during the building of initial words ("m S")</label>
+              <code proglang="perl">" -F \"m S\""</code>
+              <code proglang="python">" -F \"m S\""</code>
+            </felem>
+            <felem>
+              <value>v2</value>
+              <label>Masking with coiled-coil should only be done during the building of initial words ("m D")</label>
+              <code proglang="perl">" -F \"m D\""</code>
+              <code proglang="python">" -F \"m D\""</code>
+            </felem>
+            <felem>
+              <value>v3</value>
+              <label>Masking with DUST should only be done during the building of initial words ("m C")</label>
+              <code proglang="perl">" -F \"m C\""</code>
+              <code proglang="python">" -F \"m C\""</code>
+            </felem>
+            <felem>
+              <value>v4</value>
+              <label>Lower-case masking (-U must be true) ( -F m")</label>
+              <code proglang="perl">" -F m"</code>
+              <code proglang="python">" -F m"</code>
+            </felem>
+          </flist>
+          <ctrl>
+            <message>
+              <text lang="en">For Lower-case masking the lower case filtering must be select.</text>
+            </message>
+            <code proglang="perl">($value eq 'null' or $value eq 'v1' or $value eq 'v2' or $value eq 'v3']) or ($value eq 'v4' and $lower_case)</code>
+            <code proglang="python">value in ['null', 'v1', 'v2', 'v3'] or (value == 'v4' and lower_case)</code>
+          </ctrl>
+          <comment>
+            <text lang="en">A coiled-coiled filter, based on the work of Lupas et al. (Science, vol 252, pp. 1162-4 (1991)) written by John Kuzio (Wilson et al., J Gen Virol, vol. 76, pp. 2923-32 (1995)).</text>
+            <text lang="en">It is possible to specify that the masking should only be done during the process of building the initial words .</text>
+            <text lang="en">If the -U option (to mask any lower-case sequence in the input FASTA file) is used and one does not wish any other filtering, but does wish to mask when building the lookup tables then one should specify: -F 'm'</text>
+          </comment>
+        </parameter>
+        <parameter>
+          <name>lower_case</name>
+          <prompt lang="en">Use lower case filtering (-U)</prompt>
+          <type>
+            <datatype>
+              <class>Boolean</class>
+            </datatype>
+          </type>
+          <vdef>
+            <value>0</value>
+          </vdef>
+          <format>
+            <code proglang="perl">($value) ? " -U T" : ""</code>
+            <code proglang="python">("", " -U T")[ bool(value) ]</code>
+          </format>
+          <comment>
+            <text lang="en">This option specifies that any lower-case letters in the input FASTA file should be masked.</text>
+          </comment>
+        </parameter>
+      </parameters>
+    </paragraph>
+    <paragraph>
+      <name>selectivity_opt</name>
+      <prompt lang="en">Selectivity options</prompt>
+      <argpos>7</argpos>
+      <comment>
+        <text lang="en">The programs blastn and blastp offer fully gapped alignments. blastx and tblastn have 'in-frame' gapped alignments and use sum statistics to link alignments from different frames. tblastx provides only ungapped alignments.</text>
+      </comment>
+      <parameters>
+        <parameter issimple="1">
+          <name>Expect</name>
+          <prompt lang="en">Expected value (-e)</prompt>
+          <type>
+            <datatype>
+              <class>Float</class>
+            </datatype>
+          </type>
+          <vdef>
+            <value>10</value>
+          </vdef>
+          <format>
+            <code proglang="perl">(defined $value and $value != $vdef) ? " -e $value" : ""</code>
+            <code proglang="python">("" , " -e "+str(value))[value is not None and value != vdef]</code>
+          </format>
+          <comment>
+            <text lang="en">
+              The statistical significance threshold for reporting matches against database sequences; the default value is 10, such that 10 matches are expected to be found merely by chance, according to the stochastic model of Karlin and Altschul (1990). If the statistical significance ascribed to a match is greater than the EXPECT threshold, the match will not be reported. Lower EXPECT thresholds are more stringent, leading to fewer chance matches being reported. Fractional values are
+              acceptable.
+            </text>
+          </comment>
+        </parameter>
+        <parameter>
+          <name>word_size</name>
+          <prompt lang="en">Word Size (-W)</prompt>
+          <type>
+            <datatype>
+              <class>Integer</class>
+            </datatype>
+          </type>
+          <format>
+            <code proglang="perl">(defined $value) ? " -W $value" : ""</code>
+            <code proglang="python">("" , " -W "+str(value))[value is not None]</code>
+          </format>
+          <comment>
+            <text lang="en">Use words of size N.</text>
+            <text lang="en">Zero invokes default behavior</text>
+            <text lang="en">Default values:</text>
+            <text lang="en">- 11 for blastn</text>
+            <text lang="en">- 3 for others</text>
+          </comment>
+        </parameter>
+        <parameter>
+          <name>dist_hits</name>
+          <prompt lang="en">Multiple Hits window size (-A)</prompt>
+          <type>
+            <datatype>
+              <class>Integer</class>
+            </datatype>
+          </type>
+          <format>
+            <code proglang="perl">(defined $value) ? " -A $value" : ""</code>
+            <code proglang="python">("" , " -A "+str(value))[value is not None]</code>
+          </format>
+          <comment>
+            <text lang="en">Default: zero for all programs</text>
+          </comment>
+        </parameter>
+        <parameter>
+          <name>extend_hit</name>
+          <prompt lang="en">Threshold for extending hits (-f)</prompt>
+          <type>
+            <datatype>
+              <class>Float</class>
+            </datatype>
+          </type>
+          <format>
+            <code proglang="perl">(defined $value) ? " -f $value" : ""</code>
+            <code proglang="python">("" , " -f "+str(value))[value is not None]</code>
+          </format>
+          <comment>
+            <text lang="en">Blast seeks first short word pairs whose aligned score reaches at least this value.</text>
+            <text lang="en">Default values:</text>
+            <text lang="en">- 0 for blastn</text>
+            <text lang="en">- 11 for blastp</text>
+            <text lang="en">- 12 for blastx</text>
+            <text lang="en">- 13 for tblastn and tblastx</text>
+          </comment>
+        </parameter>
+        <parameter>
+          <name>dropoff_extent</name>
+          <prompt lang="en">X dropoff value for gapped alignment (-X)</prompt>
+          <type>
+            <datatype>
+              <class>Float</class>
+            </datatype>
+          </type>
+          <format>
+            <code proglang="perl">(defined $value) ? " -X $value" : ""</code>
+            <code proglang="python">("" , " -X "+str(value))[value is not None]</code>
+          </format>
+          <comment>
+            <text lang="en">This is the value that control the path graph region explored by Blast during a gapped extension (Xg in the NAR paper) (default for blastp is 15).</text>
+            <text lang="en">Default values:</text>
+            <text lang="en">- 30 for blastn</text>
+            <text lang="en">- 0 for tblastx</text>
+            <text lang="en">- 15 for others</text>
+          </comment>
+        </parameter>
+        <parameter>
+          <name>dropoff_final</name>
+          <prompt lang="en">X dropoff value for final alignment gapped alignment (-Z)</prompt>
+          <type>
+            <datatype>
+              <class>Float</class>
+            </datatype>
+          </type>
+          <format>
+            <code proglang="perl">(defined $value) ? " -Z $value" : ""</code>
+            <code proglang="python">("" , " -Z "+str(value))[value is not None]</code>
+          </format>
+          <comment>
+            <text lang="en">Default values:</text>
+            <text lang="en">- 50 for blastn</text>
+            <text lang="en">- 0 for tblastx</text>
+            <text lang="en">- 25 for others</text>
+          </comment>
+        </parameter>
+        <parameter>
+          <name>eff_len</name>
+          <prompt lang="en">Effective length of the search space (-Y)</prompt>
+          <type>
+            <datatype>
+              <class>Integer</class>
+            </datatype>
+          </type>
+          <format>
+            <code proglang="perl">(defined $value) ? " -Y $value" : ""</code>
+            <code proglang="python">("" , " -Y "+str(value))[value is not None]</code>
+          </format>
+          <comment>
+            <text lang="en">Use zero for the real size</text>
+          </comment>
+        </parameter>
+        <parameter>
+          <name>keep_hits</name>
+          <prompt lang="en">Number of best hits from a region to keep (-K)</prompt>
+          <type>
+            <datatype>
+              <class>Integer</class>
+            </datatype>
+          </type>
+          <format>
+            <code proglang="perl">(defined $value) ? " -K $value" : ""</code>
+            <code proglang="python">("" , " -K "+str(value))[value is not None]</code>
+          </format>
+          <comment>
+            <text lang="en">If this option is used, a value of 100 is recommended.</text>
+          </comment>
+        </parameter>
+        <parameter>
+          <name>gapped_alig</name>
+          <prompt lang="en">Perform or not gapped alignment (not available with tblastx) (-g)</prompt>
+          <type>
+            <datatype>
+              <class>Boolean</class>
+            </datatype>
+          </type>
+          <precond>
+            <code proglang="perl">$blast2 ne "tblastx"</code>
+            <code proglang="python">blast2 != "tblastx"</code>
+          </precond>
+          <vdef>
+            <value>1</value>
+          </vdef>
+          <format>
+            <code proglang="perl">($value) ? "" : " -g F "</code>
+            <code proglang="python">(" -g F " , "")[value]</code>
+          </format>
+        </parameter>
+        <parameter>
+          <name>mode</name>
+          <prompt lang="en">Single-hit or multiple-hit mode (-P)</prompt>
+          <type>
+            <datatype>
+              <class>Choice</class>
+            </datatype>
+          </type>
+          <precond>
+            <code proglang="perl">$blast2 ne "blastn"</code>
+            <code proglang="python">blast2 != "blastn"</code>
+          </precond>
+          <vdef>
+            <value>0</value>
+          </vdef>
+          <vlist>
+            <velem>
+              <value>0</value>
+              <label>Multiple-hit (0)</label>
+            </velem>
+            <velem>
+              <value>1</value>
+              <label>Single-hit (1)</label>
+            </velem>
+          </vlist>
+          <format>
+            <code proglang="perl">($value ne "0") ? " -P $value" : ""</code>
+            <code proglang="python">("" , " -P "+str(value))[value != "0"]</code>
+          </format>
+        </parameter>
+      </parameters>
+    </paragraph>
+    <paragraph>
+      <name>translation_opt</name>
+      <prompt lang="en">Translation options</prompt>
+      <argpos>30</argpos>
+      <parameters>
+        <parameter>
+          <name>gc_query</name>
+          <prompt lang="en">Genetic code used for query translation (-Q)</prompt>
+          <type>
+            <datatype>
+              <class>Choice</class>
+            </datatype>
+          </type>
+          <precond>
+            <code proglang="perl">$blast2 =~ /^t?blastx$/</code>
+            <code proglang="python">blast2 in [ "blastx" , "tblastx" ]</code>
+          </precond>
+          <vdef>
+            <value>1</value>
+          </vdef>
+          <vlist>
+            <velem>
+              <value>1</value>
+              <label>Standard (1)</label>
+            </velem>
+            <velem>
+              <value>2</value>
+              <label>Vertebrate Mitochondrial (2)</label>
+            </velem>
+            <velem>
+              <value>3</value>
+              <label>Yeast Mitochondrial (3)</label>
+            </velem>
+            <velem>
+              <value>4</value>
+              <label>Mold, Protozoan, Coelenterate Mitochondrial and Mycoplasma/Spiroplasma (4)</label>
+            </velem>
+            <velem>
+              <value>5</value>
+              <label>Invertebrate Mitochondrial (5)</label>
+            </velem>
+            <velem>
+              <value>6</value>
+              <label>Ciliate Macronuclear and Dasycladacean (6)</label>
+            </velem>
+            <velem>
+              <value>9</value>
+              <label>Echinoderm Mitochondrial (9)</label>
+            </velem>
+            <velem>
+              <value>10</value>
+              <label>Euplotid Nuclear (10)</label>
+            </velem>
+            <velem>
+              <value>11</value>
+              <label>Bacterial (11)</label>
+            </velem>
+            <velem>
+              <value>12</value>
+              <label>Alternative Yeast Nuclear (12)</label>
+            </velem>
+            <velem>
+              <value>13</value>
+              <label>Ascidian Mitochondrial (13)</label>
+            </velem>
+            <velem>
+              <value>14</value>
+              <label>Flatworm Mitochondrial (14)</label>
+            </velem>
+            <velem>
+              <value>15</value>
+              <label>Blepharisma Macronuclear (15)</label>
+            </velem>
+          </vlist>
+          <format>
+            <code proglang="perl">(defined $value and $value ne $vdef) ? " -Q $value" : ""</code>
+            <code proglang="python">("" , " -Q "+str(value))[value is not None and value != vdef]</code>
+          </format>
+        </parameter>
+        <parameter>
+          <name>gc_db</name>
+          <prompt lang="en">Genetic code used for database translation (-D)</prompt>
+          <type>
+            <datatype>
+              <class>Choice</class>
+            </datatype>
+          </type>
+          <precond>
+            <code proglang="perl">$blast2 =~ /^tblast[nx]$/</code>
+            <code proglang="python">blast2 in [ "tblastn", "tblastx" ]</code>
+          </precond>
+          <vdef>
+            <value>1</value>
+          </vdef>
+          <vlist>
+            <velem>
+              <value>1</value>
+              <label>Standard (1)</label>
+            </velem>
+            <velem>
+              <value>2</value>
+              <label>Vertebrate Mitochondrial (2)</label>
+            </velem>
+            <velem>
+              <value>3</value>
+              <label>Yeast Mitochondrial (3)</label>
+            </velem>
+            <velem>
+              <value>4</value>
+              <label>Mold, Protozoan, Coelenterate Mitochondrial and Mycoplasma/Spiroplasma (4)</label>
+            </velem>
+            <velem>
+              <value>5</value>
+              <label>Invertebrate Mitochondrial (5)</label>
+            </velem>
+            <velem>
+              <value>6</value>
+              <label>Ciliate Macronuclear and Dasycladacean (6)</label>
+            </velem>
+            <velem>
+              <value>9</value>
+              <label>Echinoderm Mitochondrial (9)</label>
+            </velem>
+            <velem>
+              <value>10</value>
+              <label>Euplotid Nuclear (10)</label>
+            </velem>
+            <velem>
+              <value>11</value>
+              <label>Bacterial (11)</label>
+            </velem>
+            <velem>
+              <value>12</value>
+              <label>Alternative Yeast Nuclear (12)</label>
+            </velem>
+            <velem>
+              <value>13</value>
+              <label>Ascidian Mitochondrial (13)</label>
+            </velem>
+            <velem>
+              <value>14</value>
+              <label>Flatworm Mitochondrial (14)</label>
+            </velem>
+            <velem>
+              <value>15</value>
+              <label>Blepharisma Macronuclear (15)</label>
+            </velem>
+          </vlist>
+          <format>
+            <code proglang="perl">($value ne $vdef) ? " -D $value" : ""</code>
+            <code proglang="python">("" , " -D "+str(value))[value != vdef]</code>
+          </format>
+        </parameter>
+        <parameter>
+          <name>strand</name>
+          <prompt lang="en">Query strands to search against database (-S)</prompt>
+          <type>
+            <datatype>
+              <class>Choice</class>
+            </datatype>
+          </type>
+          <precond>
+            <code proglang="perl">$blast2 =~ /^(blastn|t?blastx)$/</code>
+            <code proglang="python">blast2 in [ "blastn" ,"blastx" , "tblastx" ]</code>
+          </precond>
+          <vdef>
+            <value>3</value>
+          </vdef>
+          <vlist>
+            <velem>
+              <value>1</value>
+              <label>Top (1)</label>
+            </velem>
+            <velem>
+              <value>2</value>
+              <label>Bottom (2)</label>
+            </velem>
+            <velem>
+              <value>3</value>
+              <label>Both (3)</label>
+            </velem>
+          </vlist>
+          <format>
+            <code proglang="perl">(defined $value and $value ne $vdef) ? " -S $value" : ""</code>
+            <code proglang="python">("" , " -S "+str(value))[value is not None and value != vdef]</code>
+          </format>
+        </parameter>
+      </parameters>
+    </paragraph>
+    <paragraph>
+      <name>affichage</name>
+      <prompt lang="en">Report options</prompt>
+      <argpos>40</argpos>
+      <parameters>
+        <parameter>
+          <name>Descriptions</name>
+          <prompt lang="en">Number of one-line descriptions to show (-v)</prompt>
+          <type>
+            <datatype>
+              <class>Integer</class>
+            </datatype>
+          </type>
+          <vdef>
+            <value>500</value>
+          </vdef>
+          <format>
+            <code proglang="perl">(defined $value and $value != $vdef) ? " -v $value" : ""</code>
+            <code proglang="python">("" , " -v "+str(value))[value is not None and value != vdef]</code>
+          </format>
+          <comment>
+            <text lang="en">Maximum number of database sequences for which one-line descriptions will be reported.</text>
+          </comment>
+        </parameter>
+        <parameter>
+          <name>Alignments</name>
+          <prompt lang="en">Number of database sequences to show alignments (-b)</prompt>
+          <type>
+            <datatype>
+              <class>Integer</class>
+            </datatype>
+          </type>
+          <vdef>
+            <value>250</value>
+          </vdef>
+          <format>
+            <code proglang="perl">(defined $value and $value != $vdef) ? " -b $value" : ""</code>
+            <code proglang="python">("" , " -b "+str(value))[value is not None and value != vdef]</code>
+          </format>
+          <comment>
+            <text lang="en">Maximum number of database sequences for which high-scoring segment pairs will be reported (-b).</text>
+          </comment>
+        </parameter>
+        <parameter>
+          <name>view_alignments</name>
+          <prompt lang="en">Alignment view options (-m)</prompt>
+          <type>
+            <datatype>
+              <class>Choice</class>
+            </datatype>
+          </type>
+          <vdef>
+            <value>0</value>
+          </vdef>
+          <vlist>
+            <velem>
+              <value>0</value>
+              <label>Pairwise (0)</label>
+            </velem>
+            <velem>
+              <value>1</value>
+              <label>Query-anchored showing identities (1)</label>
+            </velem>
+            <velem>
+              <value>2</value>
+              <label>Query-anchored no identities (2)</label>
+            </velem>
+            <velem>
+              <value>3</value>
+              <label>Flat query-anchored, show identities (3)</label>
+            </velem>
+            <velem>
+              <value>4</value>
+              <label>Flat query-anchored, no identities (5)</label>
+            </velem>
+            <velem>
+              <value>5</value>
+              <label>Query-anchored no identities and blunt ends (5)</label>
+            </velem>
+            <velem>
+              <value>6</value>
+              <label>Flat query-anchored, no identities and blunt ends (6)</label>
+            </velem>
+            <velem>
+              <value>7</value>
+              <label>XML Blast output (7)</label>
+            </velem>
+            <velem>
+              <value>8</value>
+              <label>Tabular output (8)</label>
+            </velem>
+          </vlist>
+          <format>
+            <code proglang="perl">(defined $value and $value ne $vdef) ? " -m $value" : ""</code>
+            <code proglang="python">("" , " -m "+str(value))[value is not None and value != vdef]</code>
+          </format>
+        </parameter>
+        <parameter ishidden="1">
+          <name>txtoutput</name>
+          <prompt lang="en">Text output file</prompt>
+          <type>
+            <datatype>
+              <class>String</class>
+            </datatype>
+          </type>
+          <precond>
+            <code proglang="perl">$view_alignments ne "7"</code>
+            <code proglang="python">view_alignments != "7"</code>
+          </precond>
+          <format>
+            <code proglang="perl">" -o blast2.txt"</code>
+            <code proglang="python">" -o blast2.txt"</code>
+          </format>
+          <argpos>50</argpos>
+        </parameter>
+        <parameter ishidden="1">
+          <name>xmloutput</name>
+          <prompt lang="en">Xml output file</prompt>
+          <type>
+            <datatype>
+              <class>String</class>
+            </datatype>
+          </type>
+          <precond>
+            <code proglang="perl">$view_alignments eq "7"</code>
+            <code proglang="python">view_alignments == "7"</code>
+          </precond>
+          <format>
+            <code proglang="perl">" -o blast2.xml"</code>
+            <code proglang="python">" -o blast2.xml"</code>
+          </format>
+          <argpos>60</argpos>
+        </parameter>
+        <parameter>
+          <name>htmloutput</name>
+          <prompt lang="en">Html output</prompt>
+          <type>
+            <datatype>
+              <class>Boolean</class>
+            </datatype>
+          </type>
+          <precond>
+            <code proglang="perl">$view_alignments !~ /^[78]$/</code>
+            <code proglang="python">view_alignments not in [ "7" , "8" ]</code>
+          </precond>
+          <vdef>
+            <value>1</value>
+          </vdef>
+          <format>
+            <code proglang="perl">($value) ? " &amp;&amp; html4blast -g -o blast2.html blast2.txt" : ""</code>
+            <code proglang="python">("" , " &amp;&amp; html4blast -g -o blast2.html blast2.txt")[value]</code>
+          </format>
+          <argpos>61</argpos>
+        </parameter>
+      </parameters>
+    </paragraph>
+    <parameter isout="1">
+      <name>txtfile</name>
+      <prompt lang="en">Blast text report</prompt>
+      <type>
+        <datatype>
+          <class>BlastTextReport</class>
+          <superclass>Report</superclass>
+        </datatype>
+      </type>
+      <precond>
+        <code proglang="perl">$view_alignments ne "7"</code>
+        <code proglang="python">view_alignments != "7"</code>
+      </precond>
+      <filenames>
+        <code proglang="perl">"blast2.txt"</code>
+        <code proglang="python">"blast2.txt"</code>
+      </filenames>
+    </parameter>
+    <parameter isout="1">
+      <name>xmlfile</name>
+      <prompt lang="en">Blast xml report</prompt>
+      <type>
+        <datatype>
+          <class>BlastXmlReport</class>
+          <superclass>Report</superclass>
+        </datatype>
+      </type>
+      <precond>
+        <code proglang="perl">$view_alignments eq "7"</code>
+        <code proglang="python">view_alignments == "7"</code>
+      </precond>
+      <filenames>
+        <code proglang="perl">"blast2.xml"</code>
+        <code proglang="python">"blast2.xml"</code>
+      </filenames>
+    </parameter>
+    <parameter isout="1">
+      <name>htmlfile</name>
+      <prompt lang="en">Blast html report</prompt>
+      <type>
+        <datatype>
+          <class>BlastHtmlReport</class>
+          <superclass>Report</superclass>
+        </datatype>
+      </type>
+      <precond>
+        <code proglang="perl">$view_alignments !~ /^[78]$/</code>
+        <code proglang="python">view_alignments not in [ "7" , "8" ]</code>
+      </precond>
+      <filenames>
+        <code proglang="perl">"blast2.html"</code>
+        <code proglang="python">"blast2.html"</code>
+      </filenames>
+    </parameter>
+    <parameter isout="1" ishidden="1">
+      <name>imgfile</name>
+      <type>
+        <datatype>
+          <class>Picture</class>
+          <superclass>Binary</superclass>
+        </datatype>
+      </type>
+      <precond>
+        <code proglang="perl">$view_alignments !~ /^[78]$/</code>
+        <code proglang="python">view_alignments not in ["7", "8"]</code>
+      </precond>
+      <filenames>
+        <code proglang="perl">"*.png"</code>
+        <code proglang="perl">"*.gif"</code>
+        <code proglang="python">"*.png"</code>
+        <code proglang="python">"*.gif"</code>
+      </filenames>
+    </parameter>
+  </parameters>
+</program>

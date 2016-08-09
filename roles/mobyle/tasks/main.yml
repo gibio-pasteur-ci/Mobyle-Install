@@ -168,6 +168,20 @@
     group=apache
     mode=0644
 
+- name: Copy local Services
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  copy:
+    src=Mobyle/Local/Services/{{ item }}
+    dest={{ mobyle_home }}/Mobyle/Local/Services/
+    owner={{ mobyle_user }}
+    group=apache
+    mode=0644
+  with_items:
+    - Programs
+    - Workflows
+    - Tutorials
+
 - name: Copy announcement files
   become: yes
   become_user: "{{ mobyle_user }}"

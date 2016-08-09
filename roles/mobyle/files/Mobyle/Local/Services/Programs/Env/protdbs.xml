@@ -1,0 +1,63 @@
+<vlist>
+    <velem undef="1">
+        <value>null</value>
+        <label>Choose a database</label>
+    </velem>
+    <velem>
+        <value>alupro</value>
+        <label>Select Alu repeats from REPBASE</label>
+    </velem>
+    <velem>
+        <value>nrprot</value>
+        <label>nrprot: NCBI non-redundant Genbank CDS translations+PDB+Swissprot+PIR</label>
+    </velem>
+    <velem>
+        <value>pdb</value>
+        <label>Protein Data Bank</label>
+    </velem>
+    <velem>
+        <value>refseqp_release</value>
+        <label>NCBI Reference Sequence (RefSeq) Database last release</label>
+    </velem>
+    <velem>
+        <value>refseqp_udpate</value>
+        <label>NCBI Reference Sequence (RefSeq) updates</label>
+    </velem>
+    <velem>
+        <value>refseqp</value>
+        <label>RefSeq (last release + updates)</label>
+    </velem>
+    <velem>
+        <value>sbase</value>
+        <label>sbase: annotated domains sequences</label>
+    </velem>
+    <velem>
+        <value>uniprot</value>
+        <label>uniprot: Universal Protein Resource (sprot+treml)</label>
+    </velem>
+    <velem>
+        <value>uniprot_sprot</value>
+        <label>uniprot_sprot: Universal Protein Resource (SwissProt part)</label>
+    </velem>
+    <velem>
+        <value>uniprot_trembl</value>
+        <label>uniprot_trembl: Universal Protein Resource (TrEmbl part)</label>
+    </velem>
+    <velem>
+        <value>uniref90</value>
+        <label>Clustered sets of sequences from UniProt Knowledgebase (UniRef 90)</label>
+    </velem>
+    <velem>
+        <value>uniref50</value>
+        <label>Clustered sets of sequences from UniProt Knowledgebase (UniRef 50)</label>
+    </velem>
+
+    <velem>
+        <value>vipr_aa</value>
+        <label>Virus Pathogen Resource</label>
+    </velem>
+    <velem>
+        <value>genbank_wgspro</value>
+        <label>Genbank : Whole Genome Shotgun</label>
+    </velem>
+</vlist>

@@ -1,0 +1,955 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow>
+  <head>
+    <name>mafft-cons-tree</name>
+    <version>0.1 beta</version>
+    <doc>
+      <title>Mafft cons quickTree</title>
+      <description>performs a multiple alignment and makes a phylogeny using a neighbor-joining method and a consensus sequence on a set of sequences</description>
+      <comment>
+      <text lang="en">The first step of this workflow align your set of sequences using mafft</text>
+      <text lang="en">The second step build a phylogentic tree (using quicktree) from the alignment produced by mafft</text>
+      <text lang="en">The third step build a consensus sequence (using cons) from the alignment produced by mafft</text>
+      </comment>
+    </doc>
+  </head>
+  <flow>
+    <task id="mafft" service="mafft" suspend="false">
+      <description>Multiple alignment program</description>
+      <inputValue name="output_format">FASTA</inputValue>
+    </task>
+    <task id="quicktree" service="quicktree" suspend="false">
+      <description>Rapid reconstruction of phylogenies by the Neighbor-Joining method</description>
+    </task>
+    <task id="cons" service="cons" suspend="false">
+      <description>Create a consensus sequence</description>
+    </task>
+    <link toTask="mafft" fromParameter="1" toParameter="sequences"/>
+    <link toTask="mafft" fromParameter="mafft_seq_type" toParameter="seq_type"/>
+    <link toTask="mafft" fromParameter="mafft_anysymbol" toParameter="anysymbol"/>
+    <link toTask="mafft" fromParameter="mafft_strategy" toParameter="strategy"/>
+    <link toTask="mafft" fromParameter="mafft_amino_scm" toParameter="amino_scm"/>
+    <link toTask="mafft" fromParameter="mafft_nuc_scm" toParameter="nuc_scm"/>
+    <link toTask="mafft" fromParameter="mafft_gap_open_penalty" toParameter="gap_open_penalty"/>
+    <link toTask="mafft" fromParameter="mafft_offset" toParameter="offset"/>
+    
+    <link fromTask="mafft" toTask="quicktree" fromParameter="result" toParameter="aligfile"/>
+    <link toTask="quicktree" fromParameter="quicktree_upgma" toParameter="upgma"/>
+    
+    <link fromTask="mafft" toTask="cons" fromParameter="result" toParameter="e_sequence"/>
+    <link toTask="cons" fromParameter="cons_e_identity" toParameter="e_identity"/>
+    <link toTask="cons" fromParameter="cons_e_outseq" toParameter="e_outseq"/>
+    <link toTask="cons" fromParameter="cons_e_osformat_outseq" toParameter="e_osformat_outseq"/>
+    <link toTask="cons" fromParameter="cons_e_name" toParameter="e_name"/>
+    
+    <link fromTask="mafft" fromParameter="result" toParameter="aln_out"/>
+    <link fromTask="quicktree" fromParameter="treefile" toParameter="tree_out"/>
+    <link fromTask="cons" fromParameter="e_outseq_out" toParameter="cons_out"/>
+  </flow>
+  <parameters>
+
+    <parameter id="1" ismandatory="1">
+      <name>sequences</name>
+      <prompt lang="en">Sequences File ( a file containing several sequences ).</prompt>
+      <type>
+        <datatype>
+          <class>Sequence</class>
+        </datatype>
+        <dataFormat>FASTA</dataFormat>
+      </type>
+    </parameter>
+    
+    <paragraph>
+      <name>mafft_settings</name>
+      <prompt lang="en">Mafft Settings</prompt>
+      <parameters>
+      
+      
+    <parameter id="mafft_seq_type">
+          <name>mafft_seq_type</name>
+          <prompt lang="en">Sequences type</prompt>
+          <type>
+            <datatype>
+              <class>Choice</class>
+            </datatype>
+          </type>
+          <vdef>
+            <value>null</value>
+          </vdef>
+          <vlist>
+            <velem undef="1">
+              <value>null</value>
+              <label>Automatic</label>
+            </velem>
+            <velem>
+              <value>nuc</value>
+              <label>Assume the sequences are nucleotide.</label>
+            </velem>
+            <velem>
+              <value>amino</value>
+              <label>Assume the sequences are amino acid.</label>
+            </velem>
+          </vlist>
+        </parameter>
+        <parameter id="mafft_anysymbol">
+    <name>mafft_anysymbol</name>
+    <prompt lang="en">Allow unusual symbols (Selenocysteine "U", Inosine "i", non-alphabetical characters, etc.)</prompt>
+    <type>
+      <datatype>
+        <class>Boolean</class>
+      </datatype>
+    </type>
+    <vdef>
+      <value>0</value>
+    </vdef>
+    <comment>
+    <div xmlns="http://www.w3.org/1999/xhtml">
+      <p>If there are unusual characters (e.g., U as selenocysteine in protein sequence), use the --anysymbol option.</p>
+      <p>It accepts any printable characters (U, O, #, $, %, etc.; 0x21-0x7e in the ASCII code), execpt for &gt; (0x3e).  
+    They are scored equivalently to X.  Gap is - (0x2d), as in the default mode.</p>
+    </div>
+    </comment>
+   </parameter>
+        
+        
+ <parameter id="mafft_strategy">
+    <name>mafft_strategy</name>
+    <prompt lang="en">Strategy:</prompt>
+    <type>
+      <datatype>
+        <class>Choice</class>
+      </datatype>
+    </type>
+    <vdef>
+      <value>auto</value>
+    </vdef>
+    <vlist>
+      <velem>
+        <value>auto</value>
+        <label>Auto (FFT-NS-2, FFT-NS-i or L-INS-i; depends on data size)</label>
+      </velem>
+      <velem>
+        <value>fftns1</value>
+        <label>FFT-NS-1 (Very fast; recommended for >2,000 sequences; progressive method)</label>
+      </velem>
+      <velem>
+        <value>fftns2</value>
+        <label>FFT-NS-2 (Fast; progressive method)</label>
+      </velem>
+      <velem>
+        <value>fftnsi2</value>
+        <label>FFT-NS-i2 (Medium; iterative refinement method, two cycles only)</label>
+      </velem>
+      <velem>
+        <value>fftnsi1000</value>
+        <label>FFT-NS-i (Slow; iterative refinement method)</label>
+      </velem>
+      <velem>
+        <value>einsi</value>
+        <label>E-INS-i (Very slow; recommended for &lt;200 sequences with multiple conserved domains and long gaps)</label>
+      </velem>
+      <velem>
+        <value>linsi</value>
+        <label>L-INS-i (Very slow; recommended for &lt;200 sequences with one conserved domain and long gaps)</label>
+      </velem>
+      <velem>
+        <value>ginsi</value>
+        <label>G-INS-i (Very slow; recommended for &lt;200 sequences with global homology)</label>
+      </velem>
+      <velem>
+        <value>qinsi</value>
+        <label>Q-INS-i (Extremely slow; recommended for a global alignment of highly diverged ncRNAs with &lt;200 seq × &lt;1,000 nt)</label>
+      </velem>
+    </vlist>
+    <comment>
+      <div xmlns="http://www.w3.org/1999/xhtml">
+      
+      <h2>Algorithms and parameters (unfinished)</h2>
+          MAFFT offers various multiple alignment strategies.
+          They are classified into three types,
+          (<b>a</b>) the progressive method,
+          (<b>b</b>) the iterative refinement method with the WSP score, and
+          (<b>c</b>) the iterative refinment method using both the WSP and consistency scores.
+          In general,
+          there is a tradeoff between speed and accuracy.
+          The order of speed is
+          <b>a</b> &gt; <b>b</b> &gt; <b>c</b>, whereas
+          the order of accuracy is <b>a</b>
+          &lt; <b>b</b> &lt; <b>c</b>.
+          The results of benchmarks can be seen
+          <a href="http://mafft.cbrc.jp/alignment/software/eval/accuracy.html">here</a>.
+          The following are the detailed procedures for the major options of MAFFT.
+          
+          <h3 id="fftnsx">(a) FFT-NS-1, FFT-NS-2 — Progressive methods</h3>
+          <img src="http://mafft.cbrc.jp/alignment/software/algorithms/prog.png" alt="prog.png" height="163" width="382" />
+            <br />
+              These are simple progressive methods like
+              <a href="http://www.ebi.ac.uk/clustalw/">ClustalW</a>.
+              By using the several new techniques described below,
+              these options can align a large number of sequences
+              (up to ∼5,000) on a standard desktop computer.
+              The qualities of the resulting alignments are shown
+              <a href="http://mafft.cbrc.jp/alignment/software/eval/accuracy.html">here</a>.
+              The detailed algorithms are described in Katoh et al. (2002).
+              <ul>
+                <li>
+                  <b>FFT-NS-1</b><br />
+                    <b><tt>
+                        mafft --retree 1
+                        <i>input_file</i>
+                        &gt;
+                        <i>output_file</i>
+                      </tt>
+                    </b>
+                    <br />
+                      or
+                      <br />
+                        <b>
+                          <tt>
+                            fftns --retree 1
+                            <i>input_file</i>
+                            &gt;
+                            <i>output_file</i>
+                          </tt>
+                        </b>
+                        <br />
+                          is the simplest progressive option in MAFFT
+                          and one of the fastest methods currently available.
+                          The procedure is:
+                          (1) make a rough distance matrix by counting the number of
+                          shared 6-tuples (see below) between every sequence pair,
+                          (2) build a guide tree
+                          and (3) align the sequences according to the branching order.
+                          <p>
+                          </p>
+                </li>
+                <li>
+                  <b>FFT-NS-2</b> 
+                  <br />
+                    <b>
+                      <tt>
+                        mafft --retree 2
+                        <i>input_file</i>
+                        &gt;
+                        <i>output_file</i>
+                      </tt>
+                    </b>
+                    <br />
+                      or
+                      <br />
+                        <b>
+                          <tt>
+                            fftns
+                            <i>input_file</i>
+                            &gt;
+                            <i>output_file</i>
+                          </tt>
+                        </b>
+                        <br />
+                          The distance matrix used in FFT-NS-1 is very approximate
+                          and unreliable.
+                          In FFT-NS-2,
+                          (4) the guide tree is re-computed from
+                          the FFT-NS-1 alignment,
+                          and (5) the second progressive alignment
+                          is carried out.
+                </li>
+              </ul>
+              The following techniques are used to improve the performance.
+              <p>
+                <span style="color: #003366; font-size: 100%; font-style: italic; font-weight: bold;"> FFT approximation.</span>
+                (Not yet written) See Katoh et al. (2002).
+              </p>
+              <p>
+                <span style="color: #003366; font-size: 100%; font-style: italic; font-weight: bold;">
+                  <i>k</i>
+                  -mer counting.
+                </span>
+                To accelerate the initial calculation of the distance matrix,
+                which requires a CPU time of
+                <i>O</i>
+                (
+                <i>N</i>
+                <sup>2</sup>
+                ) steps,
+                a rough method similar to the 'quicktree' option of ClustalW
+                is adopted,
+                in which the number of
+                <i>k</i>
+                -mers shared by
+                a pair of sequences
+                is counted and regarded as an approximation
+                of the degree of similarity.
+                MAFFT uses the very rapid method proposed by Jones et al. (1992)
+                with a minor modification
+                (Katoh et al. 2002): (1) The 20 amino acids are compressed to 6
+                alphabets, according to Dayhoff et al. (1978),
+                and
+                (2) MAFFT performs the second progressive alignment (FFT-NS-2) in order to
+                improve the accuracy.
+              </p>
+              <p>
+                <span style="color: #003366; font-size: 100%; font-style: italic; font-weight: bold;"> Modified UPGMA.</span> 
+                <a href="upg.html">A modified version of UPGMA</a>
+                is used to construct a guide tree,
+                which works well for handling fragment sequences.
+              </p>
+              <p>
+                <span style="color: #003366; font-size: 100%; font-style: italic; font-weight: bold;">The second progressive alignment.</span> 
+                The accuracy of the second progressive alignment (FFT-NS-2)
+                is slightly higher than that of the first progressive alignment (FFT-NS-1)
+                according to the
+                <a href="http://mafft.cbrc.jp/alignment/software/eval/accuracy.html">BAliBASE test</a>
+                ,
+                but the amount CPU time required by FFT-NS-2 is
+                approximately two times longer than that by FFT-NS-1.
+              </p>
+        
+              <h3>(b) FFT-NS-i, NW-NS-i — Iterative refinement method</h3>
+              <img src="http://mafft.cbrc.jp/alignment/software/algorithms/iter.png" alt="iter.png" height="200" width="379" />
+                <br />
+                  The accuracy of progressive alignment
+                  can be improved
+                  by the iterative refinement method (Berger and Munson 1991, Gotoh 1993).
+                  A simplified version of
+                  <a href="">PRRN</a>
+                  is implemented as the
+                  FFT-NS-i option of MAFFT.
+                  In FFT-NS-i,
+                  an initial alignment by FFT-NS-2 is subjected to
+                  an iterative refienment process.
+                  <ul>
+                    <li>
+                      <b>FFT-NS-i (max. 1,000 cycles)</b>  
+                      <br />
+                        <b>
+                          <tt>
+                            mafft --maxiterate 1000
+                            <i>input_file</i>
+                            &gt;
+                            <i>output_file</i>
+                          </tt>
+                        </b>
+                        <br />
+                          or
+                          <br />
+                            <b>
+                              <tt>
+                                fftnsi --maxiterate 1000
+                                <i>input_file</i>
+                                &gt;
+                                <i>output_file</i>
+                              </tt>
+                            </b>
+                            <br />
+                              The iterative refinement is repeated until
+                              no more improvement in the WSP score is made or the number of cycles reaches 1,000.
+                              <p>
+                              </p>
+                    </li>
+                    <li>
+                      <b>FFT-NS-i (max. 2 cycles)</b>
+                      <br />
+                        <b>
+                          <tt>
+                            mafft --maxiterate 1000
+                            <i>input_file</i>
+                            &gt;
+                            <i>output_file</i>
+                          </tt>
+                        </b>
+                        <br />
+                          or
+                          <br />
+                            <b>
+                              <tt>
+                                fftnsi
+                                <i>input_file</i>
+                                &gt;
+                                <i>output_file</i>
+                              </tt>
+                            </b>
+                            <br />
+                              As most of the quality of improvement is obtained in the early
+                              stage of the iteration, this option is also useful
+                              (default of the fftnsi script).
+                    </li>
+                  </ul>
+                  <p>
+                    <span style="color: #003366; font-size: 100%; font-style: italic; font-weight: bold;">Objective function.</span> 
+                    The weighted sum-of-pairs (WSP) score proposed by Gotoh is used.
+                  </p>
+                  <p>
+                    <span style="color: #003366; font-size: 100%; font-style: italic; font-weight: bold;">Tree-dependent partitioning.</span> 
+                    (Not yet written)
+                    See Hirosawa et al.
+                  </p>
+                  <p>
+                    <span style="color: #003366; font-size: 100%; font-style: italic; font-weight: bold;">Effect of FFT.</span> 
+                    To test the effect of the FFT approximation,
+                    we also implemented the NW-NS-x options,
+                    in which the FFT approximation is disabled, but the other procedures are the same
+                    as those in the corresponding FFT-NS-x.
+                    There was no significant reduction in the accuracy
+                    by introducing the FFT approximation
+                    (Katoh et al. 2002).
+                  </p>
+        
+                  <h3>(c) L-INS-i, E-INS-i, G-INS-i — Iterative refinement methods using WSP and consistency scores</h3>
+                  <img src="http://mafft.cbrc.jp/alignment/software/algorithms/cons.png" alt="cons.png" height="134" width="366" />
+                    <br />
+                      In order to obtain more accurate alignments in extremely difficult cases,
+                      three new options, L-INS-i, G-INS-i and E-INS-i, have been added to
+                      recent versions (v.≥5) of MAFFT.
+                      These options use
+                      a new objective function combining the WSP score (Gotoh) explained above
+                      and the COFFEE-like score (Notredame et al.),
+                      which evaluates the consistency between
+                      a multiple alignment and pairwise alignments (Katoh et al. 2005).
+        
+        
+                      <p id="GLE">
+                        For pairwise alignment,
+                        three different types of algorithms are implemented,
+                        global alignment (Needleman-Wunsch), local alignment (Smith-Waterman)
+                        with affine gap costs (Gotoh) and
+                        local alignment with generalized affine gap costs (Altschul).
+                        The differences in the accuracy values among these methods are small
+                        for the currently available benchmarks, as shown
+                        <a href="http://mafft.cbrc.jp/alignment/software/eval/accuracy.html">here</a>
+                        .
+                        However,
+                        each of them has different characteristics, according to the algorithm
+                        in the pairwise alignment stage:
+                      </p>
+                      <ul>
+                        <li id="einsi">
+                          <b>E-INS-i</b>
+                          <br />
+                            <b>
+                              <tt>
+                                mafft --genafpair --maxiterate 1000
+                                <i>input_file</i>
+                                &gt;
+                                <i>output_file</i>
+                              </tt>
+                            </b>
+                            <br />
+                              or
+                              <br />
+                                <b>
+                                  <tt>
+                                    einsi
+                                    <i>input_file</i>
+                                    &gt;
+                                    <i>output_file</i>
+                                  </tt>
+                                </b>
+                                <br />
+                                  is suitable for alignments like this:
+                                  <pre style="background-color: #F0F0F0; border: 0 solid #AAAAAA; font-size: 90%; font-weight: bold;">
+ oooooooooXXX------XXXX---------------------------------XXXXXXXXXXX-XXXXXXXXXXXXXXXooooooooooooo
+ ---------XXXXXXXXXXXXXooo------------------------------XXXXXXXXXXXXXXXXXX-XXXXXXXX-------------
+ -----ooooXXXXXX---XXXXooooooooooo----------------------XXXXX----XXXXXXXXXXXXXXXXXXooooooooooooo
+ ---------XXXXX----XXXXoooooooooooooooooooooooooooooooooXXXXX-XXXXXXXXXXXX--XXXXXXX-------------
+ ---------XXXXX----XXXX---------------------------------XXXXX---XXXXXXXXXX--XXXXXXXooooo--------
+                                  </pre>
+                                  where '
+                                  <tt>X</tt>
+                                  's indicate alignable residues,
+                                  '
+                                  <tt>o</tt>
+                                  's indicate unalignable residues and
+                                  '
+                                  <tt>-</tt>
+                                  's indicate gaps.
+                                  Unalignable residues are left
+                                  unaligned
+                                  at the pairwise alignment stage,
+                                  because of the use of the generalized affine gap cost.
+                                  Therefore E-INS-i is applicable to a difficult problem such as RNA polymerase, which
+                                  has several conserved motifs embedded in long unalignable regions.
+                                  As E-INS-i has the minimum assumption of the three methods,
+                                  this is recommended if the nature of sequences to be aligned is not clear.
+                                  Note that E-INS-i assumes that the arrangement of the conserved motifs is shared by
+                                  all sequences.
+        
+                        </li>
+                        <li id="linsi">
+                          
+                            <b>L-INS-i</b>
+                            <br />
+                              <b>
+                                <tt>
+                                  mafft --localpair --maxiterate 1000
+                                  <i>input_file</i>
+                                  &gt;
+                                  <i>output_file</i>
+                                </tt>
+                              </b>
+                              <br />
+                                or
+                                <br />
+                                  <b>
+                                    <tt>
+                                      linsi
+                                      <i>input_file</i>
+                                      &gt;
+                                      <i>output_file</i>
+                                    </tt>
+                                  </b>
+                                  <br />
+                                    is suitable to:
+                          
+                          <pre style="background-color: #F0F0F0; border: 0 solid #AAAAAA; font-size: 90%; font-weight: bold;">
+ ooooooooooooooooooooooooooooooooXXXXXXXXXXX-XXXXXXXXXXXXXXX------------------
+ --------------------------------XX-XXXXXXXXXXXXXXX-XXXXXXXXooooooooooo-------
+ ------------------ooooooooooooooXXXXX----XXXXXXXX---XXXXXXXooooooooooo-------
+ --------ooooooooooooooooooooooooXXXXX-XXXXXXXXXX----XXXXXXXoooooooooooooooooo
+ --------------------------------XXXXXXXXXXXXXXXX----XXXXXXX------------------
+                          </pre>
+                          L-INS-i can align
+                          a set of sequences containing sequences flanking
+                          around one alignable domain.
+                          Flanking sequences are ignored in the pairwise alignment
+                          by the Smith-Waterman algorithm.
+                          Note that the input sequences are assumed to have
+                          only one alignable domain.
+                          In benchmark tests, the ref4 of BAliBASE corresponds to this.
+                          The other categories of BAliBASE also correspond to similar situations,
+                          because they have flanking sequences.
+                          L-INS-i also shows higher accuracy values for a part of SABmark and HOMSTRAD
+                          than G-INS-i, but we have not identified the reason for this.
+        
+                        </li>
+                        <li id="ginsi">
+                            <b>G-INS-i</b>
+                            <br />
+                              <b>
+                                <tt>
+                                  mafft --globalpair --maxiterate 1000
+                                  <i>input_file</i>
+                                  &gt;
+                                  <i>output_file</i>
+                                </tt>
+                              </b>
+                              <br />
+                                or
+                                <br />
+                                  <b>
+                                    <tt>
+                                      ginsi
+                                      <i>input_file</i>
+                                      &gt;
+                                      <i>output_file</i>
+                                    </tt>
+                                  </b>
+                                  <br />
+                                    is suitable to:
+                          <pre style="background-color: #F0F0F0; border: 0 solid #AAAAAA; font-size: 90%; font-weight: bold;">
+ XXXXXXXXXXX-XXXXXXXXXXXXXXX
+ XX-XXXXXXXXXXXXXXX-XXXXXXXX
+ XXXXX----XXXXXXXX---XXXXXXX
+ XXXXX-XXXXXXXXXX----XXXXXXX
+ XXXXXXXXXXXXXXXX----XXXXXXX
+                          </pre>
+                          G-INS-i assumes that entire region can be aligned
+                          and tries to align them globally using
+                          the Needleman-Wunsch algorithm;
+                          that is,
+                          a set of sequences of one domain
+                          must be extracted by truncating flanking
+                          sequences.
+                          In benchmark tests, SABmark and HOMSTRAD correspond to this.
+                        </li>
+                      </ul>
+        
+                      <p>
+                        <span style="color: #003366; font-size: 100%; font-style: italic; font-weight: bold;">Consistency score.</span> 
+                        The COFFEE objective function was originally proposed
+                        by Notredame et al. (1998), and
+                        the extended versions are used in TCoffee and ProbCons.
+                        MAFFT also adopts a similar objective function, as described
+                        in Katoh et al. (2005).
+                        However,
+                        the consistency among three sequences
+                        (called 'library extension' in TCoffee)
+                        is currently not calculated in MAFFT,
+                        because the improvement in accuracy by library extension was limited to
+                        alignments consisting of a small number (&lt;10) of sequences
+                        in our preliminary tests.
+                        If library extention is needed, then please use
+                        <a href="http://igs-server.cnrs-mrs.fr/%7Ecnotred/Projects_home_page/t_coffee_home_page.html">TCoffee</a>
+                        or
+                        <a href="http://probcons.stanford.edu/">ProbCons</a>.
+                      </p>
+                      <p>
+                        <span style="color: #003366; font-size: 100%; font-style: italic; font-weight: bold;">Consistency + WSP.</span> 
+                        Instead,
+                        the WSP score is summed with the consistency score in the
+                        objective function of MAFFT.
+                        The use of the WSP score
+                        has the merit that a pattern of gaps can be incorporated
+                        into the objective function.
+                        This is probably the reason why
+                        MAFFT achieves higher accuracy than
+                        ProbCons and TCoffee for alignments consisting of
+                        many (∼10 - ∼100) sequences.
+                        This suggests that
+                        the pattern of gaps within a group
+                        to be aligned
+                        is important information
+                        when aligning two groups of proteins (and evaluating
+                        homology between distantly related protein families).
+                      </p>
+      
+      </div>
+    </comment>
+    </parameter>
+    
+    <parameter id="mafft_amino_scm">
+    <name>mafft_amino_scm</name>
+    <prompt lang="en">Scoring matrix for amino acid sequences:</prompt>
+    <type>
+      <datatype>
+        <class>Choice</class>
+      </datatype>
+    </type>
+    <vdef>
+      <value>BLOSUM62</value>
+    </vdef>
+    <vlist>
+      <velem>
+        <value>BLOSUM30</value>
+        <label>BLOSUM30</label>
+      </velem>
+      <velem>
+        <value>BLOSUM45</value>
+        <label>BLOSUM45</label>
+      </velem>
+      <velem>
+        <value>BLOSUM62</value>
+        <label>BLOSUM62</label>
+      </velem>
+      <velem>
+        <value>BLOSUM80</value>
+        <label>BLOSUM80</label>
+      </velem>
+      <velem>
+        <value>JT100</value>
+        <label>JT100</label>
+      </velem>
+      <velem>
+        <value>JT200</value>
+        <label>JT200</label>
+      </velem>
+    </vlist>
+    <comment>
+      <text lang="en">The BLOSUM62 matrix is adopted as a default scoring matrix, 
+      because this showed slightly higher accuracy values than the 
+      BLOSUM80, 45, JTT200PAM, 100PAM and Gonnet matrices in SABmark tests. </text>
+    </comment>
+   </parameter>
+   
+   <parameter id="mafft_nuc_scm">
+    <name>mafft_nuc_scm</name>
+    <prompt lang="en">Scoring matrix for nucleotide sequences:</prompt>
+    <type>
+      <datatype>
+        <class>Choice</class>
+      </datatype>
+    </type>
+    <vdef>
+      <value>200</value>
+    </vdef>
+    <vlist>
+      <velem undef="1">
+        <value>200</value>
+        <label>200PAM/ k=2</label>
+      </velem>
+      <velem>
+        <value>20</value>
+        <label>20PAM/ k=2</label>
+      </velem>
+      <velem>
+        <value>1</value>
+        <label>1PAM/ k=2</label>
+      </velem>
+    </vlist>
+    <comment>
+     <div xmlns="http://www.w3.org/1999/xhtml">
+      <p style="color: red">Switch it to '1PAM / κ=2' when aligning closely related DNA sequences.</p>
+      <p>The default scoring matrix is derived from Kimura's two-parameter model. 
+      The ratio of transitions to transversions is set at 2 by default. 
+      Other parameters can be used, but have not yet been tested. </p>
+      </div>
+    </comment>  
+   </parameter>
+
+     <parameter id="mafft_gap_open_penalty">
+    <name>mafft_gap_open_penalty</name>
+    <prompt lang="en">Gap opening penalty: </prompt>
+    <type>
+      <datatype>
+        <class>Float</class>
+      </datatype> 
+    </type>
+    <vdef>
+      <value>1.53</value>
+    </vdef>
+    <ctrl>
+      <message>
+        <text lang="en">You must provide a value between 1.0 &lt; value &lt; 3.0</text>
+      </message>
+      <code proglang="">1.0 &lt; $value &lt; 3.0</code>
+      <code proglang="">1.0 &lt; value &lt; 3.0</code>
+    </ctrl>
+    <comment>
+      <div xmlns="http://www.w3.org/1999/xhtml">
+      <p>
+        <span style="color: #003366; font-size: 100%; font-style: italic; font-weight: bold;">
+          Gap penalties for proteins.</span>
+        The default gap penalties for amino acid alignments
+        have been changed in
+        <span style="color: red">v.4.0</span>.
+        Note that the current version of MAFFT returns
+        an entirely different alignment from v.&lt;4.0.
+        In v.4.0, two major gap penalties
+        (--op [gap open penalty]
+        and --ep [offset value, which functions like a gap extension penalty,
+        see the
+        <a href="http://mafft.cbrc.jp/alignment/software/algorithms/algorithms.html">mafft3 paper</a>
+        for definition])
+        were tuned by applying the FFT-NS-2 option to a part of
+        the SABmark benchmark.
+        We adopted the parameter set (--op 1.53 --ep 0.123) optimized for
+        SABmark,
+        because this works better for other benchmark
+        (HOMSTRAD, PREFAB and BAliBASE)
+        tests than
+        the previous one (--ep 2.4 --ep 0.06).
+        Other parameters might work better in other situations.
+        Consistency-based options have more parameters
+        (L-INS-i has four more parameters and E-INS-i has six more parameters).
+        We determined these additional parameters so that the Smith-Waterman alignment function
+        used in L-INS-i
+        returns a local alignment similar to that generated by FASTA,
+        but we have not closely tuned them yet.
+        In our tests using SABmark,
+        the accuracy values can be improved by 2-3% by
+        tuning these parameters,
+        but this improvement may result from overfitting.
+      
+      </p>
+        <p>
+          <span style="color: #003366; font-size: 100%; font-style: italic; font-weight: bold;">Gap penalties for RNAs.</span>
+          The default gap penalties for nucleotide alignment
+          have changed in
+          <span class="red">
+            v.5.6</span>.
+          Note that the current version of MAFFT returns
+          an entirely different alignment from v.&lt;5.6.
+          In the former versions (v.&lt;5.6),
+          the default gap penalties for nucleotide alignments were set at the same values
+          as those for amino acid alignments.
+          According to
+          <a href="http://projects.binf.ku.dk/pgardner/bralibase/">BRAliBASE</a>
+          ,
+          these penalties result in
+          very bad alignments for RNAs.
+          The newer versions (v.≥5.6) use a different penalties for nucleotide alignment;
+          the penalty values are set to three times larger than those for amino acids.
+          This is not yet the optimal value for BRAliBASE.
+          The BRAliBASE score can be improved by
+          closely tuning the penalty values, but we have not adopted the
+          optimized penalties, because we are not sure whether they are
+          applicable to a wide range of problems.
+        </p>
+      </div>
+    </comment> 
+   </parameter>
+    
+       <parameter id="mafft_offset">
+    <name>mafft_offset</name>
+    <prompt lang="en">Offset value</prompt>
+    <type>
+      <datatype>
+        <class>Float</class>
+      </datatype>
+    </type>
+    <vdef>
+      <value>0.0</value>
+    </vdef>
+    <ctrl>
+      <message>
+        <text lang="en">You must provide a value between 0.0 &lt; value &lt; 1.0 (default 0.123)</text>
+      </message>
+      <code proglang="">0.0 &lt; $value &lt; 1.0</code>
+      <code proglang="">0.0 &lt; value &lt; 1.0</code>
+    </ctrl>
+    <comment>
+      <div xmlns="http://www.w3.org/1999/xhtml">
+        <p style="color: red">If long gaps are not expected, set it as 0.1 or larger value.</p>
+      </div>
+    </comment>
+   </parameter>
+        
+    </parameters>
+    </paragraph>
+
+	<paragraph>
+		<name>quicktree</name>
+		<prompt lang="en">QuickTree Settings</prompt>
+		<parameters>
+		<parameter id="quicktree_upgma">
+          <name>quicktree_upgma</name>
+          <prompt lang="en">Use the UPGMA method to construct the tree (-upgma)</prompt>
+          <type>
+            <datatype>
+              <class>Boolean</class>
+            </datatype>
+          </type>
+          <vdef>
+            <value>0</value>
+          </vdef>
+          <comment>
+            <text lang="en">Bootstrapping is not available for a matrix output</text>
+          </comment>
+        </parameter>
+		</parameters>
+	</paragraph>    
+	
+	<paragraph>
+		<name>cons_settings</name>
+		<prompt lang="en">cons Settings</prompt>
+		<parameters>
+		
+		<parameter id="cons_e_identity">
+          <name>e_identity</name>
+          <prompt lang="en">Required number of identities at a position (value greater than or equal to 0)</prompt>
+          <type>
+            <datatype>
+              <class>Integer</class>
+            </datatype>
+          </type>
+          <vdef>
+            <value>0</value>
+          </vdef>
+          <ctrl>
+            <message>
+              <text lang="en">Value greater than or equal to 0 is required</text>
+            </message>
+            <code proglang="python">value &gt;= 0</code>
+          </ctrl>
+          <comment>
+            <text lang="en">Provides the facility of setting the required number of identities at a site for it to give a consensus at that position.  Therefore, if this is set to the number of sequences in the  alignment only columns of identities contribute to the consensus.</text>
+          </comment>
+        </parameter>
+		
+		<parameter id="cons_e_outseq">
+          <name>e_outseq</name>
+          <prompt lang="en">Name of the output sequence file (e_outseq)</prompt>
+          <type>
+            <datatype>
+              <class>Filename</class>
+            </datatype>
+          </type>
+          <vdef>
+            <value>cons.e_outseq</value>
+          </vdef>
+        </parameter>
+		
+		        <parameter id="cons_e_osformat_outseq">
+          <name>e_osformat_outseq</name>
+          <prompt lang="en">Choose the sequence output format</prompt>
+          <type>
+            <datatype>
+              <class>Choice</class>
+            </datatype>
+          </type>
+          <vdef>
+            <value>FASTA</value>
+          </vdef>
+          <vlist>
+            <velem>
+              <value>EMBL</value>
+              <label>Embl</label>
+            </velem>
+            <velem>
+              <value>FASTA</value>
+              <label>Fasta</label>
+            </velem>
+            <velem>
+              <value>GCG</value>
+              <label>Gcg</label>
+            </velem>
+            <velem>
+              <value>GENBANK</value>
+              <label>Genbank</label>
+            </velem>
+            <velem>
+              <value>NBRF</value>
+              <label>Nbrf</label>
+            </velem>
+            <velem>
+              <value>PIR</value>
+              <label>Pir</label>
+            </velem>
+            <velem>
+              <value>RAW</value>
+              <label>Raw</label>
+            </velem>
+            <velem>
+              <value>SWISSPROT</value>
+              <label>Swissprot</label>
+            </velem>
+          </vlist>
+        </parameter>
+		
+		<parameter id="cons_e_name">
+          <name>e_name</name>
+          <prompt lang="en">Name of the consensus sequence</prompt>
+          <type>
+            <datatype>
+              <class>String</class>
+            </datatype>
+          </type>
+        </parameter>
+      </parameters>
+    </paragraph>
+	
+    <parameter id="aln_out" isout="true">
+      <name>alignment</name>
+      <prompt lang="en">Alignment file</prompt>
+      <type>
+        <datatype>
+          <class>Alignment</class>
+        </datatype>
+        <dataFormat>FASTA</dataFormat>
+      </type>
+    </parameter>
+        
+    <parameter id="tree_out" isout="true">
+      <name>tree</name>
+      <prompt>Phylogenetic Tree</prompt>
+      <type>
+        <datatype>
+          <class>Tree</class>
+        </datatype>
+      </type>
+    </parameter>
+    
+    <parameter id="cons_out" isout="true">
+          <name>consensus</name>
+          <prompt lang="en">Consensus Sequence</prompt>
+          <type>
+            <datatype>
+              <class>Sequence</class>
+            </datatype>
+            <dataFormat>FASTA</dataFormat>
+          </type>
+        </parameter>
+    
+  </parameters>
+</workflow>
+

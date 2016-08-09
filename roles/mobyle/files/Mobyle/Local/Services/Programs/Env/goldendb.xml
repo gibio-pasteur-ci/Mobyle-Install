@@ -1,0 +1,51 @@
+      <vlist>
+        <velem undef="1">
+          <value>null</value>
+          <label>Choose a db</label>
+        </velem>
+        <velem>
+          <value>embl</value>
+          <label>EMBL Nucleotide Sequence Database</label>
+        </velem>
+        <velem>
+          <value>enzyme</value>
+          <label>Enzyme nomenclature database</label>
+        </velem>
+        <velem>
+          <value>genbank</value>
+          <label>Genbank NIH DNA sequence database</label>
+        </velem>
+        <velem>
+          <value>genbank_wgsnuc</value>
+          <label>Genbank Whole Genome Shotgun Nucleic</label>
+        </velem>
+        <velem>
+          <value>genbank_wgspro</value>
+          <label>Genbank Whole Genome Shotgun Protein</label>
+        </velem>
+        <velem>
+          <value>imgt</value>
+          <label>IMGT - ImMunoGeneTics sequence database</label>
+        </velem>
+        <velem>
+          <value>prosite</value>
+          <label>PROSITE - Dictionary of Protein Sites and Patterns</label>
+        </velem>
+        <velem>
+          <value>rdpii</value>
+          <label>RDPII - Ribosomal Database Project II database</label>
+        </velem>
+        <velem>
+          <value>refseq</value>
+          <label>NCBI Reference Sequence (RefSeq) Database</label>
+        </velem>
+        <velem>
+          <value>uniprot</value>
+          <label>UniprotKB - Universal Protein Knowlege Base</label>
+        </velem>
+        <velem>
+          <value>embl_wgs</value>
+          <label>EMBL Whole Genome Shotgun</label>
+        </velem>
+     </vlist>
+
