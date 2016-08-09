@@ -157,7 +157,17 @@
     mode=0644
   with_fileglob:
     - files/Mobyle/Local/CustomClasses/*.py
-    
+
+- name: Copy Local policy
+  become: yes
+  become_user: "{{ mobyle_user }}"
+  copy:
+    src=Mobyle/Local/Policy.py
+    dest={{ mobyle_home }}/Mobyle/Local/Policy.py
+    owner={{ mobyle_user }}
+    group=apache
+    mode=0644
+
 - name: Copy announcement files
   become: yes
   become_user: "{{ mobyle_user }}"
