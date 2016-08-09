@@ -59,7 +59,7 @@
 
 #source ${HOME}/.git-prompt.sh
 
-- name: set user prompt in blue in .bashrc
+- name: set user prompt in green in .bashrc
   become: yes
   become_user: "{{ mobyle_user }}"
   lineinfile:
