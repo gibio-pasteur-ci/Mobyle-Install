@@ -1,0 +1,33 @@
+Order allow,deny
+Allow from all
+
+
+# Temporary disable ...
+RewriteEngine   On
+
+RewriteCond	%{REQUEST_URI}	/cgi-bin/MobylePortal/(.*)
+RewriteRule	.*		/cgi-bin/%1 [R,L]
+
+RewriteCond     %{REQUEST_URI}  ^/cgi-bin/portal.py
+RewriteCond     %{QUERY_STRING}     forms=(.*)
+RewriteRule     .*              /cgi-bin/portal.py?#forms::%1 [NE,R,L]
+
+RewriteCond     %{REQUEST_URI}  ^/cgi-bin/portal.py
+RewriteCond     %{QUERY_STRING}     form=(.*)
+RewriteRule     .*              /cgi-bin/portal.py?#forms::%1 [NE,R,L]
+
+RewriteCond     %{REQUEST_URI}  ^/cgi-bin/portal.py
+RewriteCond     %{QUERY_STRING}     jobs=http://(.*)/(.*)/(.*)/(.*)/(.*)
+RewriteRule     .*              /cgi-bin/portal.py?#jobs::%4.%5 [NE,R,L]
+
+# Do not allow fancy http requests on CGIs
+<LimitExcept GET POST HEAD>
+  Deny from all
+</LimitExcept>
+
+
+#for load module depencies automatically
+SetEnv AUTOLOADMODULE 1
+
+AddType text/plain .pdb
+
